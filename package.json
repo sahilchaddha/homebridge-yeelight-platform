@@ -52,7 +52,6 @@
     "eslint-plugin-import": "^2.13.0"
   },
   "dependencies": {
-    "babel-eslint": "^8.2.6",
-    "yeelight.js": "^1.0.1"
+    "babel-eslint": "^8.2.6"
   }
 }
