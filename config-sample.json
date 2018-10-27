@@ -1,0 +1,12 @@
+{
+    "platforms": [
+        {
+            "platform": "Yeelight-Platform",
+            "debug": true,
+            "addResetSwitch": true,
+            "scenes": {
+                "romantic": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10"
+            }
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+  "name": "homebridge-yeelight-platform",
+  "version": "1.1.0",
+  "description": "Homebridge Plugin for YeeLight LED Strips with preset scenes/Color Flow",
+  "main": "index.js",
+  "preferGlobal": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint .",
+    "ci": "npm install && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahilchaddha/homebridge-yeelight-platform.git"
+  },
+  "keywords": [
+    "homebridge",
+    "homebridge-plugin",
+    "Flux",
+    "yee",
+    "home",
+    "wifi",
+    "zengge",
+    "led",
+    "strips",
+    "lighbulb",
+    "blub",
+    "preset",
+    "yeelight",
+    "xiaomi",
+    "scene",
+    "automation",
+    "fade",
+    "strobe",
+    "party",
+    "color-cycle",
+    "homekit",
+    "color-flow"
+  ],
+  "engines": {
+    "homebridge": ">=0.4.30"
+  },
+  "author": "Sahil Chaddha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sahilchaddha/homebridge-yeelight-platform/issues"
+  },
+  "homepage": "https://github.com/sahilchaddha/homebridge-yeelight-platform#readme",
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
+  },
+  "dependencies": {
+    "babel-eslint": "^8.2.6",
+    "yeelight.js": "^1.0.1"
+  }
+}
