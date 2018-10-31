@@ -5,7 +5,6 @@
 //  Created by Sahil Chaddha on 14/10/2018.
 //  Copyright © 2018 sahilchaddha.com. All rights reserved.
 //
-
 const ResetSwitch = require('./accessories/resetSwitch')
 const FlowSwitch = require('./accessories/flowSwitch')
 const LightBulb = require('./accessories/lightBulb')
@@ -38,9 +37,16 @@ YeelightPlatform.prototype = {
   },
   configureAccessory: function (accessory) {
     console.log("Configure")
+    // Configure Old Accessory
+    // LightSwitch
+    // LightBulb
+    // Probably want to cache using MAC. Only constant in so many variables
     console.log(accessory)
   },
   lightDidConnect: function (light, address) {
+    // Cache Light
+    // Check if already added
+    // Add newly light to service
     console.log(light.id)
     // return
     var accessories = []
@@ -59,7 +65,7 @@ YeelightPlatform.prototype = {
     // this.api.registerPlatformAccessories(pluginName, platformName, [resetSwitch.ac]);
 
     /*
-      id: '0x00000000052ebb4a',
+   {   id: '0x00000000052ebb4a',
   connected: true,
   name: '',
   power: 'on',
