@@ -57,23 +57,6 @@ YeelightPlatform.prototype = {
       })
     }
     // this.api.registerPlatformAccessories(pluginName, platformName, [resetSwitch.ac]);
-
-    /*
-   {   id: '0x00000000052ebb4a',
-  connected: true,
-  name: '',
-  power: 'on',
-  bright: '100',
-  rgb: '16711680',
-  ct: '4000',
-  hue: '359',
-  sat: '100',
-  color_mode: '2',
-  delayoff: '0',
-  flowing: '0',
-  flow_params: '',
-  music_on: '0' }
-    */
   },
 }
 

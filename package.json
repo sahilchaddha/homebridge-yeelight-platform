@@ -53,6 +53,6 @@
   },
   "dependencies": {
     "babel-eslint": "^8.2.6",
-    "yeelight-platform": "^1.0.2"
+    "yeelight-platform": "^1.0.4"
   }
 }
