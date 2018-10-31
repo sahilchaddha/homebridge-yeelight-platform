@@ -7,7 +7,7 @@
 //
 
 const Accessory = require('./base')
-const emitter = require('../lib/emitter')
+// const emitter = require('../lib/emitter')
 
 const FlowSwitch = class extends Accessory {
   constructor(config, log, homebridge) {

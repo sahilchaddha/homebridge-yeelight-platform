@@ -7,7 +7,7 @@
 //
 const ResetSwitch = require('./accessories/resetSwitch')
 const FlowSwitch = require('./accessories/flowSwitch')
-const LightBulb = require('./accessories/lightBulb')
+// const LightBulb = require('./accessories/lightBulb')
 
 const pluginName = 'homebridge-yeelight-platform'
 const platformName = 'Yeelight-Platform'
@@ -30,24 +30,18 @@ function YeelightPlatform(log, config = {}, api) {
 YeelightPlatform.prototype = {
   didFinishLaunching: function () {
     // Start Discovery
-    const self = this
-    YeeAgent.discover((light, res) => {
-      self.lightDidConnect(light, res.headers.Location)
-    })
+
   },
-  configureAccessory: function (accessory) {
-    console.log("Configure")
+  configureAccessory: function () {
     // Configure Old Accessory
     // LightSwitch
     // LightBulb
     // Probably want to cache using MAC. Only constant in so many variables
-    console.log(accessory)
   },
-  lightDidConnect: function (light, address) {
+  lightDidConnect: function () {
     // Cache Light
     // Check if already added
     // Add newly light to service
-    console.log(light.id)
     // return
     var accessories = []
     if (this.config.addResetSwitch && !this.resetSwitch) {
