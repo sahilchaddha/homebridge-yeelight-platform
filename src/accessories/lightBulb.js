@@ -6,52 +6,52 @@
 //  Copyright © 2018 sahilchaddha.com. All rights reserved.
 //
 
+const Accessory = require('./base')
 const yeeService = require('../services/deviceService')
 
-const LightBulb = class {
+const LightBulb = class extends Accessory {
   constructor(light, log, homebridge, accessory = null) {
-    this.name = 'Yeelight Flows Reset'
+    super(light, log, homebridge, accessory)
+    this.name = light.id || 'Yeelight Bulb'
     this.log = log
     if (accessory) {
-        yeeService.addCachedDevice(accessory.context.lightInfo)
+      yeeService.addCachedDevice(accessory.context.lightInfo)
     }
   }
 
-  updateDevice(device) { }
+  updateDevice() { }
 
-  accessory() { }
+  //   getAccessoryServices() {
+  //     const switchService = new this.homebridge.Service.Switch(this.name)
+  //     switchService
+  //       .getCharacteristic(this.homebridge.Characteristic.On)
+  //       .on('get', this.getState.bind(this))
+  //       .on('set', this.switchStateChanged.bind(this))
+  //     return [switchService]
+  //   }
 
-    //   getAccessoryServices() {
-    //     const switchService = new this.homebridge.Service.Switch(this.name)
-    //     switchService
-    //       .getCharacteristic(this.homebridge.Characteristic.On)
-    //       .on('get', this.getState.bind(this))
-    //       .on('set', this.switchStateChanged.bind(this))
-    //     return [switchService]
-    //   }
+  //   switchStateChanged(newState, callback) {
+  //     callback()
+  //     emitter.emit('YeeLightTurnOff')
+  //   }
 
-    //   switchStateChanged(newState, callback) {
-    //     callback()
-    //     emitter.emit('YeeLightTurnOff')
-    //   }
+  //   updateState() {
+  //     this.services[0]
+  //       .getCharacteristic(this.homebridge.Characteristic.On)
+  //       .updateValue(false)
+  //   }
 
-    //   updateState() {
-    //     this.services[0]
-    //       .getCharacteristic(this.homebridge.Characteristic.On)
-    //       .updateValue(false)
-    //   }
+  //   getState(callback) {
+  //     callback(null, false)
+  //   }
 
-    //   getState(callback) {
-    //     callback(null, false)
-    //   }
+  //   getModelName() {
+  //     return 'YEE Reset Switch'
+  //   }
 
-    //   getModelName() {
-    //     return 'YEE Reset Switch'
-    //   }
-
-//   getSerialNumber() {
-//     return '00-001-ResetSwitch-YEE'
-//   }
+  //   getSerialNumber() {
+  //     return '00-001-ResetSwitch-YEE'
+  //   }
 }
 
 module.exports = LightBulb

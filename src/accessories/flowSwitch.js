@@ -11,10 +11,11 @@ const Accessory = require('./base')
 
 const FlowSwitch = class extends Accessory {
   constructor(config, log, homebridge, accessory, baseConfig) {
-    super(config, log, homebridge)
+    super(config, log, homebridge, accessory)
     this.name = config.name
     this.flow = config.flow
     this.did = config.did
+    this.baseConfig = baseConfig
   }
 
   getAccessoryServices() {

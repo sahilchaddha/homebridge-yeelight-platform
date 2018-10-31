@@ -11,7 +11,7 @@ const emitter = require('../lib/emitter')
 
 const ResetSwitch = class extends Accessory {
   constructor(config, log, homebridge, accessory) {
-    super(config, log, homebridge)
+    super(config, log, homebridge, accessory)
     this.name = 'Yeelight Flows Reset'
   }
 

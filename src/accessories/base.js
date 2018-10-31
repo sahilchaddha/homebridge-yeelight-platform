@@ -7,18 +7,27 @@
 //
 
 const Accessory = class {
-  constructor(config, log, homebridge, accessory) {
+  constructor(config, log, homebridge, accessory = null) {
     this.homebridge = homebridge
     this.log = log
 
     this.config = config
     this.name = config.name
-    this.services = this.getAccessoryServices()
-    this.uuid = homebridge.UUIDGen.generate(this.name)
-    this.ac = new homebridge.Accessory(this.name, this.uuid)
-    this.services.forEach((element) => {
-      this.ac.addService(element)
-    })
+    if (!accessory) {
+      this.services = this.getAccessoryServices()
+      this.uuid = homebridge.UUIDGen.generate(this.name)
+      this.ac = new homebridge.Accessory(this.name, this.uuid)
+      this.services.forEach((element) => {
+        this.ac.addService(element)
+      })
+    } else {
+      this.ac = accessory
+      this.setAccessoryServices()
+    }
+  }
+
+  accessory() {
+    return this.ac
   }
 
   getInformationService() {
@@ -31,7 +40,11 @@ const Accessory = class {
   }
 
   getAccessoryServices() {
-    throw new Error('The getSystemServices method must be overridden.')
+    throw new Error('The getAccessoryServices method must be overridden.')
+  }
+
+  setAccessoryServices() {
+    throw new Error('The setAccessoryServices method must be overridden.')
   }
 
   getModelName() {
