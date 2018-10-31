@@ -7,7 +7,7 @@
 //
 
 const Accessory = class {
-  constructor(config, log, homebridge) {
+  constructor(config, log, homebridge, accessory) {
     this.homebridge = homebridge
     this.log = log
 
@@ -21,8 +21,13 @@ const Accessory = class {
     })
   }
 
-  identify(callback) {
-    callback()
+  getInformationService() {
+    var informationService = new this.homebridge.Service.AccessoryInformation()
+    informationService
+      .setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'Yeelight-Platform')
+      .setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
+      .setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.getSerialNumber())
+    return informationService
   }
 
   getAccessoryServices() {

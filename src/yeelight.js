@@ -5,9 +5,10 @@
 //  Created by Sahil Chaddha on 14/10/2018.
 //  Copyright © 2018 sahilchaddha.com. All rights reserved.
 //
+const yeeService = require('./services/deviceService')
 const ResetSwitch = require('./accessories/resetSwitch')
 const FlowSwitch = require('./accessories/flowSwitch')
-// const LightBulb = require('./accessories/lightBulb')
+const LightBulb = require('./accessories/lightBulb')
 
 const pluginName = 'homebridge-yeelight-platform'
 const platformName = 'Yeelight-Platform'
@@ -18,9 +19,12 @@ var homebridge
 function YeelightPlatform(log, config = {}, api) {
   this.log = log
   this.config = config
+  this.debug = this.config.debug || false
+  this.addResetSwitch = this.config.addResetSwitch || true
   this.lights = {}
-  this.flows = []
-  this.resetSwitch = null
+  this.switches = []
+  yeeService.setHomebridge(homebridge)
+  if (this.debug) yeeService.setLogger(log)
   if (api) {
     this.api = api
     this.api.on('didFinishLaunching', this.didFinishLaunching.bind(this))
@@ -29,34 +33,51 @@ function YeelightPlatform(log, config = {}, api) {
 
 YeelightPlatform.prototype = {
   didFinishLaunching: function () {
-    // Start Discovery
-
+    yeeService.on('deviceAdded', this.lightDidConnect.bind(this))
+    yeeService.on('deviceUpdated', this.lightDidConnect.bind(this))
+    yeeService.startDiscovery()
   },
-  configureAccessory: function () {
-    // Configure Old Accessory
-    // LightSwitch
-    // LightBulb
-    // Probably want to cache using MAC. Only constant in so many variables
-  },
-  lightDidConnect: function () {
-    // Cache Light
-    // Check if already added
-    // Add newly light to service
-    // return
-    var accessories = []
-    if (this.config.addResetSwitch && !this.resetSwitch) {
-      this.resetSwitch = new ResetSwitch({}, this.log, homebridge)
-      accessories.push(this.resetSwitch)
-    }
-
-    if (this.config.flows != null) {
-      Object.keys(this.config.flows).forEach((flow) => {
-        const flowSwitch = new FlowSwitch(flow, this.log, homebridge)
-        accessories.push(flowSwitch)
-        this.flows.push(flowSwitch)
+  addBaseAccessories: function () {
+    if (this.config.scenes && this.config.scenes.length > 0) {
+      var accessories = []
+      this.config.scenes.forEach((scene) => {
+        accessories.push(new FlowSwitch(scene, this.log, homebridge))
       })
+      if (this.addResetSwitch) {
+        accessories.push(new ResetSwitch({}, this.log, homebridge))
+      }
+      this.switches = accessories
+      var nativeAcc = []
+      accessories.forEach((acc) => {
+        nativeAcc.push(acc.accessory())
+      });
+      this.api.registerPlatformAccessories(pluginName, platformName, nativeAcc);
     }
-    // this.api.registerPlatformAccessories(pluginName, platformName, [resetSwitch.ac]);
+  },
+  configureAccessory: function (accessory) {
+    if (accessory.context.accType === 'lightBulb') {
+      accessory.reachable = true
+      const lightBulb = new LightBulb(null, this.log, homebridge, accessory)
+      this.lights[accessory.context.lightInfo.id] = lightBulb
+    } else if (accessory.context.accType === 'presetSwitch') {
+      const presetSwitch = new FlowSwitch(null, this.log, homebridge, accessory, this.config)
+      this.switches.push(presetSwitch)
+    } else if (accessory.context.accType === 'resetSwitch') {
+      const resetSwitch = new ResetSwitch({}, this.log, homebridge, accessory)
+      this.switches.push(resetSwitch)
+    }
+  },
+  lightDidUpdate: function (light) {
+    if (this.lights[light.id] != null) {
+      this.lights[light.id].updateDevice(light)
+      this.api.updatePlatformAccessories([this.lights[light.id].accessory()])
+    }
+  },
+  lightDidConnect: function (light) {
+    const lightBulb = new LightBulb(light, this.log, homebridge)
+    this.lights[light.id] = lightBulb
+    const accessory = lightBulb.accessory()
+    this.api.registerPlatformAccessories(pluginName, platformName, [accessory])
   },
 }
 
