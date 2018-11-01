@@ -36,6 +36,13 @@ YeelightPlatform.prototype = {
     yeeService.on('deviceAdded', this.lightDidConnect.bind(this))
     yeeService.on('deviceUpdated', this.lightDidConnect.bind(this))
     yeeService.startDiscovery()
+
+    if (this.switches.length <= 0) {
+      // TODO:
+    // If switch doesnt exist add new base accessory
+    // Compare with presetSwitch
+      this.addBaseAccessories()
+    }
   },
   addBaseAccessories: function () {
     if (this.config.scenes && this.config.scenes.length > 0) {

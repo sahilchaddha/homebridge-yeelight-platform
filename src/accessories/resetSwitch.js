@@ -12,7 +12,8 @@ const emitter = require('../lib/emitter')
 const ResetSwitch = class extends Accessory {
   constructor(config, log, homebridge, accessory) {
     super(config, log, homebridge, accessory)
-    this.name = 'Yeelight Flows Reset'
+    this.name = 'Reset Yeelight'
+    this.ac.context.accType = 'resetSwitch'
   }
 
   getAccessoryServices() {
@@ -24,13 +25,21 @@ const ResetSwitch = class extends Accessory {
     return [switchService]
   }
 
+  setAccessoryServices() {
+    const switchService = this.ac.getService(this.homebridge.Service.Switch)
+    switchService
+      .getCharacteristic(this.homebridge.Characteristic.On)
+      .on('get', this.getState.bind(this))
+      .on('set', this.switchStateChanged.bind(this))
+  }
+
   switchStateChanged(newState, callback) {
     callback()
     emitter.emit('YeeLightTurnOff')
   }
 
   updateState() {
-    this.services[0]
+    this.ac.getService(this.homebridge.Service.Switch)
       .getCharacteristic(this.homebridge.Characteristic.On)
       .updateValue(false)
   }
