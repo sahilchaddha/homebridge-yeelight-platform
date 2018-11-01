@@ -8,10 +8,12 @@
 
 const Accessory = require('./base')
 const emitter = require('../lib/emitter')
+const yeeService = require('../services/deviceService')
 
 const ResetSwitch = class extends Accessory {
-  constructor(config, log, homebridge, accessory) {
+  constructor(config, log, homebridge, accessory, shouldTurnOff) {
     super(config, log, homebridge, accessory)
+    this.shouldTurnOff = shouldTurnOff
     this.name = 'Reset Yeelight'
     this.ac.context.accType = 'resetSwitch'
   }
@@ -35,7 +37,9 @@ const ResetSwitch = class extends Accessory {
 
   switchStateChanged(newState, callback) {
     callback()
-    emitter.emit('YeeLightTurnOff')
+    yeeService.resetLights(this.shouldTurnOff)
+    emitter.emit('YeeLightTurnOff', 'all')
+    setTimeout(this.updateState.bind(this), 2000)
   }
 
   updateState() {

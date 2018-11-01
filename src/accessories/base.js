@@ -15,6 +15,7 @@ const Accessory = class {
     this.name = config.name
     if (!accessory) {
       this.services = this.getAccessoryServices()
+      this.services.push(this.getInformationService())
       this.uuid = homebridge.UUIDGen.generate(this.name)
       this.ac = new homebridge.Accessory(this.name, this.uuid)
       this.services.forEach((element) => {

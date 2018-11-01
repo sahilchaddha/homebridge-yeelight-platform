@@ -21,8 +21,10 @@ function YeelightPlatform(log, config = {}, api) {
   this.config = config
   this.debug = this.config.debug || false
   this.addResetSwitch = this.config.addResetSwitch || true
+  this.shouldTurnOff = this.config.shouldTurnOff || true
   this.lights = {}
-  this.switches = []
+  this.switches = {}
+  this.resetSwitch = null
   yeeService.setHomebridge(homebridge)
   if (this.debug) yeeService.setLogger(log)
   if (api) {
@@ -37,23 +39,24 @@ YeelightPlatform.prototype = {
     yeeService.on('deviceUpdated', this.lightDidConnect.bind(this))
     yeeService.startDiscovery()
 
-    if (this.switches.length <= 0) {
-      // TODO:
-    // If switch doesnt exist add new base accessory
-    // Compare with presetSwitch
-      this.addBaseAccessories()
-    }
+    this.addBaseAccessories()
   },
   addBaseAccessories: function () {
     if (this.config.scenes && this.config.scenes.length > 0) {
       var accessories = []
       this.config.scenes.forEach((scene) => {
-        accessories.push(new FlowSwitch(scene, this.log, homebridge))
+        if (this.switches[scene.name] != null) return
+        const fSwitch = new FlowSwitch(scene, this.log, homebridge, null, null, this.shouldTurnOff)
+        this.switches[scene.name] = fSwitch
+        accessories.push(fSwitch)
       })
-      if (this.addResetSwitch) {
-        accessories.push(new ResetSwitch({}, this.log, homebridge))
+
+      if (this.addResetSwitch && this.resetSwitch == null) {
+        const rSwitch = new ResetSwitch({}, this.log, homebridge, null, this.shouldTurnOff)
+        this.resetSwitch = rSwitch
+        accessories.push(rSwitch)
       }
-      this.switches = accessories
+
       var nativeAcc = []
       accessories.forEach((acc) => {
         nativeAcc.push(acc.accessory())
@@ -67,11 +70,11 @@ YeelightPlatform.prototype = {
       const lightBulb = new LightBulb(null, this.log, homebridge, accessory)
       this.lights[accessory.context.lightInfo.id] = lightBulb
     } else if (accessory.context.accType === 'presetSwitch') {
-      const presetSwitch = new FlowSwitch(null, this.log, homebridge, accessory, this.config)
-      this.switches.push(presetSwitch)
+      const presetSwitch = new FlowSwitch(null, this.log, homebridge, accessory, this.config, this.shouldTurnOff)
+      this.switches[accessory.context.sceneName] = presetSwitch
     } else if (accessory.context.accType === 'resetSwitch') {
-      const resetSwitch = new ResetSwitch({}, this.log, homebridge, accessory)
-      this.switches.push(resetSwitch)
+      const resetSwitch = new ResetSwitch({}, this.log, homebridge, accessory, this.shouldTurnOff)
+      this.resetSwitch = resetSwitch
     }
   },
   lightDidUpdate: function (light) {

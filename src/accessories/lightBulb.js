@@ -11,47 +11,63 @@ const yeeService = require('../services/deviceService')
 
 const LightBulb = class extends Accessory {
   constructor(light, log, homebridge, accessory = null) {
-    super(light, log, homebridge, accessory)
-    this.name = light.id || 'Yeelight Bulb'
-    this.log = log
-    if (accessory) {
-      yeeService.addCachedDevice(accessory.context.lightInfo)
+    var lightInfo = {}
+    if (light) {
+      lightInfo = light
+      lightInfo.name = light.id
+    } else if (accessory) {
+      lightInfo = JSON.parse(accessory.context.lightInfo)
+      yeeService.addCachedDevice(lightInfo)
     }
+    super(lightInfo, log, homebridge, accessory)
+    this.light = lightInfo
+    this.name = lightInfo.name
+    this.log = log
+    if (light) {
+      this.ac.context.lightInfo = JSON.stringify(lightInfo)
+    }
+
+    // Connect Device
+    // Bind Device Events
   }
 
-  updateDevice() { }
+  updateDevice(light) {
+    var lightInfo = light
+    lightInfo.name = light.id
+    this.ac.context.lightInfo = JSON.stringify(lightInfo)
+    this.light = lightInfo
+    // Disconnect
+    // Connect
+  }
 
-  //   getAccessoryServices() {
-  //     const switchService = new this.homebridge.Service.Switch(this.name)
-  //     switchService
-  //       .getCharacteristic(this.homebridge.Characteristic.On)
-  //       .on('get', this.getState.bind(this))
-  //       .on('set', this.switchStateChanged.bind(this))
-  //     return [switchService]
-  //   }
+  connectDevice() {
 
-  //   switchStateChanged(newState, callback) {
-  //     callback()
-  //     emitter.emit('YeeLightTurnOff')
-  //   }
+  }
 
-  //   updateState() {
-  //     this.services[0]
-  //       .getCharacteristic(this.homebridge.Characteristic.On)
-  //       .updateValue(false)
-  //   }
+  bindDevice() {
 
-  //   getState(callback) {
-  //     callback(null, false)
-  //   }
+  }
 
-  //   getModelName() {
-  //     return 'YEE Reset Switch'
-  //   }
+  deviceStateChanged(props) {
+    this.log(props)
+  }
 
-  //   getSerialNumber() {
-  //     return '00-001-ResetSwitch-YEE'
-  //   }
+  getAccessoryServices() {
+    // const switchService = new this.homebridge.Service.Switch(this.name)
+    return []
+  }
+
+  setAccessoryServices() {
+
+  }
+
+  getModelName() {
+    return 'YeeLightBulb'
+  }
+
+  getSerialNumber() {
+    return this.name
+  }
 }
 
 module.exports = LightBulb

@@ -8,27 +8,48 @@
 
 const Accessory = require('./base')
 const emitter = require('../lib/emitter') // YeeLightTurnOff
+const yeeService = require('../services/deviceService')
+const flows = require('../flows')
 
 const FlowSwitch = class extends Accessory {
-  constructor(config, log, homebridge, accessory, baseConfig) {
-    // var newConfig = {}
-    // TODO:
+  constructor(config, log, homebridge, accessory, baseConfig, shouldTurnOff) {
+    var newConfig = {}
     if (config) {
-      // newConfig = config
-      // config.name
-      // name with id + preset Switch
-      // Add to accessory Context
+      newConfig = config
     } else if (baseConfig && accessory) {
-      // Get preset switch details from accessory and rematch with baseConfig
+      const sceneName = accessory.context.sceneName
+      newConfig.name = sceneName
     }
-    super(config, log, homebridge, accessory)
-    this.name = config.name
-    this.flow = config.flow
-    this.did = config.did
+    super(newConfig, log, homebridge, accessory)
+    this.shouldTurnOff = shouldTurnOff
+    this.name = newConfig.name
     this.baseConfig = baseConfig
     this.ac.context.accType = 'presetSwitch'
-    this.flowName = ''
+    this.flowName = 'romantic'
     this.flowParams = []
+    this.lights = []
+    this.isOn = false
+    if (config) {
+      this.flowName = config.name
+      this.flowParams = config.params
+      this.flowScene = config.scene
+      this.lights = config.lights
+      this.ac.context.sceneName = config.name
+    } else if (baseConfig && accessory) {
+      this.flowName = accessory.context.sceneName
+
+      if (baseConfig.scenes && baseConfig.scenes.length > 0) {
+        baseConfig.scenes.forEach((baseScene) => {
+          if (baseScene.name === this.flowName) {
+            this.flowScene = baseScene.scene
+            this.flowParams = baseScene.params
+            this.lights = baseScene.lights
+          }
+        })
+      }
+    }
+
+    this.bindEvents()
   }
 
   getAccessoryServices() {
@@ -40,19 +61,74 @@ const FlowSwitch = class extends Accessory {
     return [switchService]
   }
 
-  switchStateChanged(newState, callback) {
-    callback()
-    emitter.emit('YeeLightTurnOff')
+  setAccessoryServices() {
+    const switchService = this.ac.getService(this.homebridge.Service.Switch)
+    switchService
+      .getCharacteristic(this.homebridge.Characteristic.On)
+      .on('get', this.getState.bind(this))
+      .on('set', this.switchStateChanged.bind(this))
   }
 
-  updateState() {
-    this.services[0]
+  getFlowParams() {
+    if (this.flowScene === 'custom') {
+      return this.flowParams
+    }
+
+    return flows[this.flowScene]
+  }
+
+  switchStateChanged(newState, callback) {
+    this.isOn = newState
+    callback()
+    if (this.isOn) {
+      // Turn off other running flows
+      emitter.emit('YeeLightTurnOff', this.name)
+      // Send Turn on Flow Command
+      yeeService.sendCommand(this.lights, {
+        id: -1,
+        method: 'set_scene',
+        params: ['cf', 0, 0, this.getFlowParams()],
+      })
+      callback()
+    } else {
+      // Send Turn off flow Command
+      yeeService.sendCommand(this.lights, {
+        id: -1,
+        method: 'stop_cf',
+        params: [],
+      })
+
+      if (this.shouldTurnOff) {
+        setTimeout(() => {
+          yeeService.sendCommand(this.lights, {
+            id: -1,
+            method: 'set_power',
+            params: ['off', 'smooth', '500'],
+          })
+          callback()
+        }, 2000)
+      } else {
+        callback()
+      }
+    }
+  }
+
+  bindEvents() {
+    emitter.on('YeeLightTurnOff', (name) => {
+      if (name === this.name) return
+      this.switchOff()
+    })
+  }
+
+  switchOff() {
+    this.isOn = false
+    this.ac.getService(this.homebridge.Service.Switch)
       .getCharacteristic(this.homebridge.Characteristic.On)
-      .updateValue(false)
+      .updateValue(this.isOn)
   }
 
   getState(callback) {
-    callback(null, false)
+    callback(null, this.isOn)
   }
 
   getModelName() {

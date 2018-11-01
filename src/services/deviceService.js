@@ -71,6 +71,32 @@ class YeeDeviceService extends EventEmitter {
     this.emit('deviceAdded', device)
   }
 
+  resetLights(shouldTurnOff) {
+    this.sendCommand(Object.keys(this.devices), {
+      id: -1,
+      method: 'stop_cf',
+      params: [],
+    })
+    if (shouldTurnOff) {
+      setTimeout(() => {
+        this.sendCommand(Object.keys(this.devices), {
+          id: -1,
+          method: 'set_power',
+          params: ['off', 'smooth', '500'],
+        })
+      }, 2000)
+    }
+  }
+
+  sendCommand(lights, cmd) {
+    lights.forEach((light) => {
+      if (this.devices[light] != null) {
+        const device = this.devices[light]
+        device.sendCommand(cmd)
+      }
+    })
+  }
+
   log(...args) {
     if (this.logger) {
       this.logger(args)
