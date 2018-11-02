@@ -79,7 +79,6 @@ const FlowSwitch = class extends Accessory {
 
   switchStateChanged(newState, callback) {
     this.isOn = newState
-    callback()
     var lights = this.lights
     if (lights == null || lights.length <= 0) {
       lights = Object.keys(yeeService.devices)

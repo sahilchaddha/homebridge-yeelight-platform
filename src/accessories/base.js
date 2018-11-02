@@ -15,12 +15,12 @@ const Accessory = class {
     this.name = config.name
     if (!accessory) {
       this.services = this.getAccessoryServices()
-      this.services.push(this.getInformationService())
       this.uuid = homebridge.UUIDGen.generate(this.name)
       this.ac = new homebridge.Accessory(this.name, this.uuid)
       this.services.forEach((element) => {
         this.ac.addService(element)
       })
+      this.setInformationService(this.ac)
     } else {
       this.ac = accessory
       this.setAccessoryServices()
@@ -31,13 +31,11 @@ const Accessory = class {
     return this.ac
   }
 
-  getInformationService() {
-    var informationService = new this.homebridge.Service.AccessoryInformation()
-    informationService
+  setInformationService(ac) {
+    ac.getService(this.homebridge.Service.AccessoryInformation)
       .setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'Yeelight-Platform')
       .setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
       .setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.getSerialNumber())
-    return informationService
   }
 
   getAccessoryServices() {

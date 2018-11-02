@@ -74,10 +74,8 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
 
 ## TODO
 ```
-    // Test Alpha
     // Calculate CT/Color Accordingly & Add Presets
     // Test Beta
-    // Edit Config.json
     // Edit README + Add Config Details for lights & custom presets + Add Supported Devices Images
     // Make Demo
     // Add Tags to Repo
@@ -129,7 +127,7 @@ https://www.mi.com/us/mi-bedside-lamp/
                 {
                     "name": "Night Mode",
                     "scene": "night_mode",
-                    "lights": ["0x000000000543dd83", "0x000000000543dd83"] 
+                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
                 },
                 {
                     "name": "Sleep Time",

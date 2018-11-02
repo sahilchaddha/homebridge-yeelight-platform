@@ -23,6 +23,7 @@ const LightBulb = class extends Accessory {
       yeeService.addCachedDevice(lightInfo)
     }
     super(lightInfo, log, homebridge, accessory)
+    this.ac.context.accType = 'lightBulb'
     this.light = lightInfo
     this.name = lightInfo.name
     this.log = log
@@ -42,11 +43,14 @@ const LightBulb = class extends Accessory {
   }
 
   updateDevice(light) {
+    this.log('** Updating Device')
     var lightInfo = light
     lightInfo.name = light.id
     this.ac.context.lightInfo = JSON.stringify(lightInfo)
     this.light = lightInfo
+    this.log('** Should Disconnect & Reconnect : ' + this.isConnected)
     if (this.isConnected) {
+      this.isConnected = false
       this.disconnectDevice()
       this.connectDevice()
     }
@@ -54,27 +58,27 @@ const LightBulb = class extends Accessory {
 
   connectDevice() {
     const device = yeeService.getDevice(this.light.id)
-    device.connect()
+    device.yeeDevice.connect()
   }
 
   disconnectDevice() {
     const device = yeeService.getDevice(this.light.id)
-    device.disconnect()
+    device.yeeDevice.disconnect()
   }
 
   bindDevice() {
     const device = yeeService.getDevice(this.light.id)
 
-    device.on('deviceUpdate', (newProps) => {
+    device.yeeDevice.on('deviceUpdate', (newProps) => {
       this.deviceStateChanged(newProps)
     })
 
-    device.on('connected', () => {
+    device.yeeDevice.on('connected', () => {
       this.log('Connected', this.name)
       this.isConnected = true
     })
 
-    device.on('disconnected', () => {
+    device.yeeDevice.on('disconnected', () => {
       this.log('Disconnected', this.name)
       this.isConnected = false
     })
@@ -204,6 +208,7 @@ const LightBulb = class extends Accessory {
     if (this.shouldAddCTChar(this.config.model)) {
       lightbulbService
         .addOptionalCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+      lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .on('get', (callback) => {
           callback(null, this.ct)
@@ -270,6 +275,7 @@ const LightBulb = class extends Accessory {
     if (this.shouldAddCTChar(this.config.model)) {
       lightbulbService
         .addOptionalCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+      lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .on('get', (callback) => {
           callback(null, this.ct)

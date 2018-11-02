@@ -52,6 +52,7 @@ class YeeDeviceService extends EventEmitter {
   }
 
   addCachedDevice(device) {
+    this.log('** Adding Cached Device', device)
     var newDevice = {}
     device.interval = 10000
     newDevice.yeeDevice = new YeeDevice(device)
@@ -78,6 +79,7 @@ class YeeDeviceService extends EventEmitter {
   }
 
   resetLights(shouldTurnOff) {
+    this.log('** Resetting all lights')
     this.sendCommand(Object.keys(this.devices), {
       id: -1,
       method: 'stop_cf',
@@ -95,6 +97,7 @@ class YeeDeviceService extends EventEmitter {
   }
 
   sendCommand(lights, cmd) {
+    this.log('** Sending Command to ', lights, cmd)
     lights.forEach((light) => {
       if (this.devices[light] != null) {
         const device = this.devices[light]

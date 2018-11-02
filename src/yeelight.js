@@ -34,25 +34,32 @@ function YeelightPlatform(log, config = {}, api) {
 }
 
 YeelightPlatform.prototype = {
+  info: function (...args) {
+    if (this.debug) this.log(args)
+  },
   didFinishLaunching: function () {
     yeeService.on('deviceAdded', this.lightDidConnect.bind(this))
     yeeService.on('deviceUpdated', this.lightDidUpdate.bind(this))
+    this.info(' ** Starting discovery **')
     yeeService.startDiscovery()
 
     this.addBaseAccessories()
   },
   addBaseAccessories: function () {
+    this.info('** Adding Base Accessories')
     if (this.config.scenes && this.config.scenes.length > 0) {
       var accessories = []
       this.config.scenes.forEach((scene) => {
         if (this.switches[scene.name] != null) return
+        this.info('** Adding new FlowSwitch ' + scene.name)
         const fSwitch = new FlowSwitch(scene, this.log, homebridge, null, null, this.shouldTurnOff)
         this.switches[scene.name] = fSwitch
         accessories.push(fSwitch)
       })
 
       if (this.addResetSwitch && this.resetSwitch == null) {
-        const rSwitch = new ResetSwitch({}, this.log, homebridge, null, this.shouldTurnOff)
+        this.info('** Adding ResetSwitch')
+        const rSwitch = new ResetSwitch({ name: 'Reset Scene' }, this.log, homebridge, null, this.shouldTurnOff)
         this.resetSwitch = rSwitch
         accessories.push(rSwitch)
       }
@@ -60,30 +67,37 @@ YeelightPlatform.prototype = {
       var nativeAcc = []
       accessories.forEach((acc) => {
         nativeAcc.push(acc.accessory())
-      });
-      this.api.registerPlatformAccessories(pluginName, platformName, nativeAcc);
+      })
+
+      this.api.registerPlatformAccessories(pluginName, platformName, nativeAcc)
     }
   },
   configureAccessory: function (accessory) {
     if (accessory.context.accType === 'lightBulb') {
+      this.info('** Configure LightBulb ' + JSON.parse(accessory.context.lightInfo).id)
       accessory.reachable = true
       const lightBulb = new LightBulb(null, this.log, homebridge, accessory)
-      this.lights[accessory.context.lightInfo.id] = lightBulb
+      this.lights[JSON.parse(accessory.context.lightInfo).id] = lightBulb
     } else if (accessory.context.accType === 'presetSwitch') {
+      this.info('** Configure FlowSwitch ' + accessory.context.sceneName)
       const presetSwitch = new FlowSwitch(null, this.log, homebridge, accessory, this.config, this.shouldTurnOff)
       this.switches[accessory.context.sceneName] = presetSwitch
     } else if (accessory.context.accType === 'resetSwitch') {
-      const resetSwitch = new ResetSwitch({}, this.log, homebridge, accessory, this.shouldTurnOff)
+      this.info('** Configuring Reset Switch')
+      const resetSwitch = new ResetSwitch({ name: 'Reset Scene' }, this.log, homebridge, accessory, this.shouldTurnOff)
       this.resetSwitch = resetSwitch
     }
   },
   lightDidUpdate: function (light) {
+    this.info('** Light Did Update ' + light.id)
     if (this.lights[light.id] != null) {
       this.lights[light.id].updateDevice(light)
+      this.info('** Updating Homekit Accessory ' + light.id)
       this.api.updatePlatformAccessories([this.lights[light.id].accessory()])
     }
   },
   lightDidConnect: function (light) {
+    this.info('** Discovered New Light ' + light.id)
     const lightBulb = new LightBulb(light, this.log, homebridge)
     this.lights[light.id] = lightBulb
     const accessory = lightBulb.accessory()

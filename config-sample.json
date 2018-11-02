@@ -18,7 +18,7 @@
                 {
                     "name": "Night Mode",
                     "scene": "night_mode",
-                    "lights": ["0x000000000543dd83", "0x000000000543dd83"] 
+                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
                 }
             ]
         }
