@@ -67,9 +67,11 @@ class YeeDeviceService extends EventEmitter {
     if (this.devices[device.id] != null) {
       // Device already exists
       const oldDevice = this.devices[device.id]
-      oldDevice.yeeDevice.updateDevice(device)
-      this.devices[device.id] = oldDevice
-      this.emit('deviceUpdated', device)
+      if (oldDevice.yeeDevice.device.Location !== device.Location) {
+        oldDevice.yeeDevice.updateDevice(device)
+        this.devices[device.id] = oldDevice
+        this.emit('deviceUpdated', device)
+      }
       return
     }
     // Add New Device

@@ -11,8 +11,6 @@ const emitter = require('../lib/emitter') // YeeLightTurnOff
 const yeeService = require('../services/deviceService')
 const flows = require('../flows')
 
-const nonFlowModes = ['night_mode', 'sunset', 'sunrise', 'movie', 'dating_night']
-
 const FlowSwitch = class extends Accessory {
   constructor(config, log, homebridge, accessory, baseConfig, shouldTurnOff) {
     var newConfig = {}
@@ -73,7 +71,7 @@ const FlowSwitch = class extends Accessory {
 
   getFlowParams() {
     if (this.flowScene === 'custom') {
-      return ['cf', 0, 0, this.flowParams]
+      return [0, 0, this.flowParams]
     }
 
     return flows[this.flowScene]
@@ -89,38 +87,49 @@ const FlowSwitch = class extends Accessory {
       // Turn off other running flows
       emitter.emit('YeeLightTurnOff', this.name)
       // Send Turn on Flow Command
-      yeeService.sendCommand(lights, {
+      var onCmd = {
         id: -1,
-        method: 'set_scene',
-        params: this.getFlowParams(),
-      })
-      callback()
+        method: 'set_power',
+        params: ['on', 'smooth', 500],
+      }
+      yeeService.sendCommand(lights, onCmd)
+
+      setTimeout(() => {
+        var flowCmd = {
+          id: -1,
+          method: 'start_cf',
+          params: this.getFlowParams(),
+        }
+        if (this.flowScene === 'night_mode') {
+          flowCmd.method = 'set_power'
+        }
+        yeeService.sendCommand(lights, flowCmd)
+        callback()
+      }, 2000)
     } else {
       // Send Turn off flow Command
-      var cmd = {
+      var offCmd = {
         id: -1,
         method: 'stop_cf',
         params: [],
       }
 
-      nonFlowModes.forEach((nonFlow) => {
-        if (nonFlow === this.flowScene) {
-          cmd.method = 'set_rgb'
-          cmd.params = [16777215, 'smooth', 500]
-        }
-      })
+      if (this.flowScene === 'night_mode') {
+        offCmd.method = 'set_power'
+        offCmd.params = ['off', 'smooth', 500, 5]
+      }
 
-      yeeService.sendCommand(lights, cmd)
+      yeeService.sendCommand(lights, offCmd)
 
       if (this.shouldTurnOff) {
         setTimeout(() => {
           yeeService.sendCommand(lights, {
             id: -1,
             method: 'set_power',
-            params: ['off', 'smooth', '500'],
+            params: ['off', 'sudden', 500],
           })
           callback()
-        }, 2000)
+        }, 5000)
       } else {
         callback()
       }

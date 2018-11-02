@@ -23,22 +23,18 @@ Edit config.json. Refer to `config-sample.json`.
 ## Available Presets Scenes
 
 ```
-    sunset
-    sunrise
-    disco
-    night_mode
-    birthday_party
-    movie
-    dating_night
-    flash_notify
-    candle_flicker
-    police_1
-    police_2
-    alarm
-    gaming
-    calm
-
-    custom
+  night_mode
+  birthday_party
+  candle_flicker
+  disco
+  flash_notify
+  police_1
+  police_2
+  alarm
+  gaming
+  calm
+  
+  custom
 ```
 
 ### Writing Custom Preset
