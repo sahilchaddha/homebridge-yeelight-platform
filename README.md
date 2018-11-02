@@ -78,7 +78,7 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
     // Calculate CT/Color Accordingly & Add Presets
     // Test Beta
     // Edit Config.json
-    // Edit README
+    // Edit README + Add Config Details for lights & custom presets
     // Make Demo
     // Add Tags to Repo
     // Test Prod
