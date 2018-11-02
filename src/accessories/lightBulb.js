@@ -81,6 +81,8 @@ const LightBulb = class extends Accessory {
   }
 
   sendCommand(type, value) {
+    // TODO: Calculate CT/Color Accordingly
+
     this.log('Sending Command to LightBulb' + this.name, type, value)
     var cmd = {
       id: -1,
@@ -88,22 +90,31 @@ const LightBulb = class extends Accessory {
     switch (type) {
       case 'power':
         cmd.method = 'set_power'
+        cmd.params = [value, 'smooth', 500]
         break
       case 'hue':
         cmd.method = 'set_hsv'
+        cmd.params = [this.hue, this.saturation, 'smooth', 500]
         break
       case 'brightness':
         cmd.method = 'set_bright'
+        cmd.params = [value, 'smooth', 500]
         break
       case 'saturation':
         cmd.method = 'set_hsv'
+        cmd.params = [this.hue, this.saturation, 'smooth', 500]
         break
       case 'ct':
-        cmd.method = 'start_cf'
+        cmd.method = 'set_ct_abx'
+        cmd.params = [this.ct, 'smooth', 500]
         break
       default:
         break
     }
+
+    cmd.params = []
+
+    yeeService.sendCommand([this.light.id], cmd)
   }
 
   deviceStateChanged(props) {
@@ -152,7 +163,7 @@ const LightBulb = class extends Accessory {
       })
       .on('set', (value, callback) => {
         this.isOn = value
-        this.sendCommand('power', this.isOn)
+        this.sendCommand('power', this.isOn ? 'on' : 'off')
         callback()
       })
 
