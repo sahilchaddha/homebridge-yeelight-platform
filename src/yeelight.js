@@ -36,7 +36,7 @@ function YeelightPlatform(log, config = {}, api) {
 YeelightPlatform.prototype = {
   didFinishLaunching: function () {
     yeeService.on('deviceAdded', this.lightDidConnect.bind(this))
-    yeeService.on('deviceUpdated', this.lightDidConnect.bind(this))
+    yeeService.on('deviceUpdated', this.lightDidUpdate.bind(this))
     yeeService.startDiscovery()
 
     this.addBaseAccessories()
