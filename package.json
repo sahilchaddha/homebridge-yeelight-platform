@@ -35,7 +35,16 @@
     "party",
     "color-cycle",
     "homekit",
-    "color-flow"
+    "color-flow",
+    "night_mode",
+    "sunset",
+    "romance",
+    "romantic",
+    "yeelight_color",
+    "xiaomi bedside lamp",
+    "yeelight ceiling",
+    "yeelight color led",
+    "bulb"
   ],
   "engines": {
     "homebridge": ">=0.4.30"

@@ -46,9 +46,15 @@ Edit config.json. Refer to `config-sample.json`.
 
 ## TODO
 ```
+    // Test Alpha
     // Calculate CT/Color Accordingly
+    // Test Beta
     // Edit Config.json
     // Edit README
+    // Make Demo
+    // Add Tags to Repo
+    // Test Prod
+    // Publish
 ```
 
 ### Demo
