@@ -18,6 +18,7 @@ class YeeDeviceService extends EventEmitter {
     this.agent = new YeeAgent()
     this.isDiscovering = false
     this.logger = null
+    this.isDebug = false
     this.homebridge = null
     this.devices = {}
   }
@@ -28,6 +29,7 @@ class YeeDeviceService extends EventEmitter {
 
   setLogger(logger) {
     this.logger = logger
+    this.isDebug = true
   }
 
   startDiscovery() {
@@ -53,11 +55,11 @@ class YeeDeviceService extends EventEmitter {
 
   addCachedDevice(device) {
     this.log('** Adding Cached Device', device)
-    var newDevice = {}
-    device.interval = 10000
-    newDevice.yeeDevice = new YeeDevice(device)
-
-    this.devices[device.id] = newDevice
+    var newDevice = device
+    newDevice.debug = this.isDebug
+    this.devices[device.id] = {
+      yeeDevice: new YeeDevice(newDevice),
+    }
   }
 
   handleDeviceDiscovery(device) {
@@ -71,10 +73,12 @@ class YeeDeviceService extends EventEmitter {
       return
     }
     // Add New Device
-    var newDevice = {}
-    device.interval = 10000
-    newDevice.yeeDevice = new YeeDevice(device)
-    this.devices[device.id] = newDevice
+    var newDevice = device
+    newDevice.debug = this.isDebug
+
+    this.devices[device.id] = {
+      yeeDevice: new YeeDevice(newDevice),
+    }
     this.emit('deviceAdded', device)
   }
 

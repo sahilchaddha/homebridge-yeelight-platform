@@ -30,7 +30,6 @@ Edit config.json. Refer to `config-sample.json`.
     birthday_party
     movie
     dating_night
-    romantic
     flash_notify
     candle_flicker
     police_1

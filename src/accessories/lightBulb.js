@@ -143,6 +143,7 @@ const LightBulb = class extends Accessory {
       } else {
         this.isOn = false
       }
+
       this.brightness = Number(results[1])
       this.rgb = Number(results[2])
       this.hue = Number(results[5])
@@ -254,7 +255,7 @@ const LightBulb = class extends Accessory {
       })
       .on('set', (value, callback) => {
         this.isOn = value
-        this.sendCommand('power', this.isOn)
+        this.sendCommand('power', this.isOn ? 'on' : 'off')
         callback()
       })
 

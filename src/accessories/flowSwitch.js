@@ -11,6 +11,8 @@ const emitter = require('../lib/emitter') // YeeLightTurnOff
 const yeeService = require('../services/deviceService')
 const flows = require('../flows')
 
+const nonFlowModes = ['night_mode' , 'sunset' , 'sunrise' , 'movie' , 'dating_night']
+
 const FlowSwitch = class extends Accessory {
   constructor(config, log, homebridge, accessory, baseConfig, shouldTurnOff) {
     var newConfig = {}
@@ -25,7 +27,7 @@ const FlowSwitch = class extends Accessory {
     this.name = newConfig.name
     this.baseConfig = baseConfig
     this.ac.context.accType = 'presetSwitch'
-    this.flowName = 'romantic'
+    this.flowName = 'disco'
     this.flowParams = []
     this.lights = []
     this.isOn = false
@@ -95,11 +97,20 @@ const FlowSwitch = class extends Accessory {
       callback()
     } else {
       // Send Turn off flow Command
-      yeeService.sendCommand(lights, {
+      var cmd = {
         id: -1,
         method: 'stop_cf',
         params: [],
+      }
+
+      nonFlowModes.forEach((nonFlow) => {
+        if (nonFlow === this.flowScene) {
+          cmd.method = 'set_rgb'
+          cmd.params = [16777215, 'smooth', 500]
+        }
       })
+
+      yeeService.sendCommand(lights, cmd)
 
       if (this.shouldTurnOff) {
         setTimeout(() => {
