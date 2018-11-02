@@ -1,4 +1,4 @@
-# (WIP) homebridge-yeelight-platform
+# homebridge-yeelight-platform
 
 [![NPM](https://nodei.co/npm/homebridge-yeelight-platform.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/homebridge-yeelight-platform/)
 
