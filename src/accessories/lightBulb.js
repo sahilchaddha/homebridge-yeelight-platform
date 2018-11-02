@@ -81,8 +81,6 @@ const LightBulb = class extends Accessory {
   }
 
   sendCommand(type, value) {
-    // TODO: Calculate CT/Color Accordingly
-
     this.log('Sending Command to LightBulb' + this.name, type, value)
     var cmd = {
       id: -1,

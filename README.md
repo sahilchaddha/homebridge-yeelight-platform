@@ -30,12 +30,18 @@ Edit config.json. Refer to `config-sample.json`.
     romantic
 ```
 
+## TODO
+```
+    // Calculate CT/Color Accordingly
+    // Edit Config.json
+    // Edit README
+```
+
 ### Demo
 
 ![Demo](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/demo.gif)
 
 ## Compatible Devices
-
 
 ## Sample Config : 
 
