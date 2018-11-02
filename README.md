@@ -25,19 +25,18 @@ Edit config.json. Refer to `config-sample.json`.
 ```
     sunset
     sunrise
+    disco
     night_mode
     birthday_party
     movie
     dating_night
-    night_fire    
     romantic
     flash_notify
     candle_flicker
     police_1
     police_2
     alarm
-    erotic
-    rgb_cycle
+    gaming
 
     custom
 ```
