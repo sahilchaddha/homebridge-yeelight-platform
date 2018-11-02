@@ -53,6 +53,7 @@ class YeeDeviceService extends EventEmitter {
 
   addCachedDevice(device) {
     var newDevice = {}
+    device.interval = 10000
     newDevice.yeeDevice = new YeeDevice(device)
 
     this.devices[device.id] = newDevice
@@ -70,6 +71,7 @@ class YeeDeviceService extends EventEmitter {
     }
     // Add New Device
     var newDevice = {}
+    device.interval = 10000
     newDevice.yeeDevice = new YeeDevice(device)
     this.devices[device.id] = newDevice
     this.emit('deviceAdded', device)
