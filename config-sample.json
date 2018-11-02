@@ -4,6 +4,7 @@
             "platform": "Yeelight-Platform",
             "debug": true,
             "addResetSwitch": true,
+            "shouldTurnOff": true,
             "scenes": [
                 {
                     "name": "Sleep Time",
