@@ -36,9 +36,9 @@ const LightBulb = class extends Accessory {
     this.hue = 36
     this.saturation = 100
     this.ct = 2700
-    // TODO: 
-    // Connect Device
-    // Bind Device Events
+    this.isConnected = false
+    this.bindDevice()
+    this.connectDevice()
   }
 
   updateDevice(light) {
@@ -46,20 +46,64 @@ const LightBulb = class extends Accessory {
     lightInfo.name = light.id
     this.ac.context.lightInfo = JSON.stringify(lightInfo)
     this.light = lightInfo
-    // Disconnect
-    // Connect
+    if (this.isConnected) {
+      this.disconnectDevice()
+      this.connectDevice()
+    }
   }
 
   connectDevice() {
+    const device = yeeService.getDevice(this.light.id)
+    device.connect()
+  }
 
+  disconnectDevice() {
+    const device = yeeService.getDevice(this.light.id)
+    device.disconnect()
   }
 
   bindDevice() {
+    const device = yeeService.getDevice(this.light.id)
 
+    device.on('deviceUpdate', (newProps) => {
+      this.deviceStateChanged(newProps)
+    })
+
+    device.on('connected', () => {
+      this.log('Connected', this.name)
+      this.isConnected = true
+    })
+
+    device.on('disconnected', () => {
+      this.log('Disconnected', this.name)
+      this.isConnected = false
+    })
   }
 
   sendCommand(type, value) {
-    this.log(type, value)
+    this.log('Sending Command to LightBulb' + this.name, type, value)
+    var cmd = {
+      id: -1,
+    }
+    switch (type) {
+      case 'power':
+        cmd.method = 'set_power'
+        break
+      case 'hue':
+        cmd.method = 'set_hsv'
+        break
+      case 'brightness':
+        cmd.method = 'set_bright'
+        break
+      case 'saturation':
+        cmd.method = 'set_hsv'
+        break
+      case 'ct':
+        cmd.method = 'start_cf'
+        break
+      default:
+        break
+    }
   }
 
   deviceStateChanged(props) {
@@ -70,12 +114,12 @@ const LightBulb = class extends Accessory {
       } else {
         this.isOn = false
       }
-      // TODO: To Numbers
-      this.brightness = results[1]
-      this.rgb = results[2]
-      this.hue = results[5]
-      this.saturation = results[6]
-      this.ct = results[7]
+
+      this.brightness = Number(results[1])
+      this.rgb = Number(results[2])
+      this.hue = Number(results[5])
+      this.saturation = Number(results[6])
+      this.ct = Number(results[7])
     }
   }
 

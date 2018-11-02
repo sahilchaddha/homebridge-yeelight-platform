@@ -80,11 +80,15 @@ const FlowSwitch = class extends Accessory {
   switchStateChanged(newState, callback) {
     this.isOn = newState
     callback()
+    var lights = this.lights
+    if (lights == null || lights.length <= 0) {
+      lights = Object.keys(yeeService.devices)
+    }
     if (this.isOn) {
       // Turn off other running flows
       emitter.emit('YeeLightTurnOff', this.name)
       // Send Turn on Flow Command
-      yeeService.sendCommand(this.lights, {
+      yeeService.sendCommand(lights, {
         id: -1,
         method: 'set_scene',
         params: ['cf', 0, 0, this.getFlowParams()],
@@ -92,7 +96,7 @@ const FlowSwitch = class extends Accessory {
       callback()
     } else {
       // Send Turn off flow Command
-      yeeService.sendCommand(this.lights, {
+      yeeService.sendCommand(lights, {
         id: -1,
         method: 'stop_cf',
         params: [],
@@ -100,7 +104,7 @@ const FlowSwitch = class extends Accessory {
 
       if (this.shouldTurnOff) {
         setTimeout(() => {
-          yeeService.sendCommand(this.lights, {
+          yeeService.sendCommand(lights, {
             id: -1,
             method: 'set_power',
             params: ['off', 'smooth', '500'],

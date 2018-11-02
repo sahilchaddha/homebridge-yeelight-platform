@@ -47,6 +47,10 @@ class YeeDeviceService extends EventEmitter {
     })
   }
 
+  getDevice(lightID) {
+    return this.devices[lightID]
+  }
+
   addCachedDevice(device) {
     var newDevice = {}
     newDevice.yeeDevice = new YeeDevice(device)
