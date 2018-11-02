@@ -11,7 +11,7 @@ const emitter = require('../lib/emitter') // YeeLightTurnOff
 const yeeService = require('../services/deviceService')
 const flows = require('../flows')
 
-const nonFlowModes = ['night_mode' , 'sunset' , 'sunrise' , 'movie' , 'dating_night']
+const nonFlowModes = ['night_mode', 'sunset', 'sunrise', 'movie', 'dating_night']
 
 const FlowSwitch = class extends Accessory {
   constructor(config, log, homebridge, accessory, baseConfig, shouldTurnOff) {
