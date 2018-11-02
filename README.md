@@ -37,6 +37,7 @@ Edit config.json. Refer to `config-sample.json`.
     police_2
     alarm
     gaming
+    calm
 
     custom
 ```
