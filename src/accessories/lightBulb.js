@@ -44,7 +44,7 @@ const LightBulb = class extends Accessory {
     this.rgb = 255
     this.hue = 36
     this.saturation = 100
-    this.ct = 2700
+    this.ct = 200
     this.isConnected = false
     this.bindDevice()
     this.connectDevice()
@@ -126,13 +126,11 @@ const LightBulb = class extends Accessory {
         break
       case 'ct':
         cmd.method = 'set_ct_abx'
-        cmd.params = [Color.HKTToKCT(this.ct), 'smooth', 500]
+        cmd.params = [Color.HKTToKCT(this.ct, this.light.model), 'smooth', 500]
         break
       default:
         break
     }
-
-    cmd.params = []
 
     yeeService.sendCommand([this.light.id], cmd)
   }
@@ -145,7 +143,6 @@ const LightBulb = class extends Accessory {
       } else {
         this.isOn = false
       }
-
       this.brightness = Number(results[1])
       this.rgb = Number(results[2])
       this.hue = Number(results[5])
@@ -155,12 +152,13 @@ const LightBulb = class extends Accessory {
         this.hue = hsl.hue
         this.saturation = hsl.sat
       }
-      this.ct = Color.KCTToHKT(Number(results[7]))
+      this.ct = Color.KCTToHKT(Number(results[7]), this.light.model)
+      this.updateDeviceProps()
     }
   }
 
   updateDeviceProps() {
-    const lightbulbService = this.ct.getService(this.homebridge.Service.Lightbulb)
+    const lightbulbService = this.ac.getService(this.homebridge.Service.Lightbulb)
     lightbulbService
       .getCharacteristic(this.homebridge.Characteristic.On)
       .updateValue(this.isOn)

@@ -101,7 +101,7 @@ class YeeDeviceService extends EventEmitter {
     lights.forEach((light) => {
       if (this.devices[light] != null) {
         const device = this.devices[light]
-        device.sendCommand(cmd)
+        device.yeeDevice.sendCommand(cmd)
       }
     })
   }
