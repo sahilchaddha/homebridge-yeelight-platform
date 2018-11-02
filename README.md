@@ -23,12 +23,26 @@ Edit config.json. Refer to `config-sample.json`.
 ## Available Presets Scenes
 
 ```
-    night_mode
-    party
-    birthday
     sunset
+    sunrise
+    night_mode
+    birthday_party
+    movie
+    dating_night
+    night_fire    
     romantic
+    flash_notify
+    candle_flicker
+    police_1
+    police_2
+    alarm
+    erotic
+    rgb_cycle
+
+    custom
 ```
+
+### Writing Custom Preset
 
 ## TODO
 ```
@@ -43,12 +57,30 @@ Edit config.json. Refer to `config-sample.json`.
 
 ## Compatible Devices
 
+https://www.yeelight.com/en_US/product/wifi-led-c
+
+https://www.yeelight.com/en_US/product/luna-mc
+
+https://www.yeelight.com/en_US/product/luna
+
+https://www.yeelight.com/en_US/product/mijia-lamp
+
+https://www.yeelight.com/en_US/product/lemon-color
+
+https://www.yeelight.com/en_US/product/lemon-ct
+
+https://www.yeelight.com/en_US/product/pitaya-plus
+
+https://www.yeelight.com/en_US/product/eos
+
+https://www.yeelight.com/en_US/product/cherry1s
+
+https://www.mi.com/us/yeelight-led-light-bulb/
+
+https://www.mi.com/us/mi-bedside-lamp/
+
 ## Sample Config : 
 
-WIP
-WIP
-
-Config will change in future.
 
 ```json
 {
@@ -57,12 +89,22 @@ Config will change in future.
             "platform": "Yeelight-Platform",
             "debug": true,
             "addResetSwitch": true,
-            "scenes": {
-                "romantic": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10", // Duration,Mode,RGB/CT,Brightness%,
-                "sunset": "sunset_preset",
-                "birthday": "birthday_preset",
-                "party": "party_preset"
-            }
+            "scenes": [
+                {
+                    "name": "Sleep Time",
+                    "scene": "custom",
+                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10"
+                },
+                {
+                    "name": "Romance Time",
+                    "scene": "romantic"
+                },
+                {
+                    "name": "Night Mode",
+                    "scene": "night_mode",
+                    "lights": ["0x000000000543dd83", "0x000000000543dd83"] 
+                }
+            ]
         }
     ]
 }
@@ -74,9 +116,17 @@ Config will change in future.
     $ npm run lint
 ```
 
+## Reference Documentation : 
+
+Yeelight Official API Documentation
+
+https://www.yeelight.com/download/Yeelight_Inter-Operation_Spec.pdf
+
 ## Need Help ?
 
 Get Slack Invite => `https://slackin-znyruquwmv.now.sh/`
+
+Slack Channel => `https://homebridgeteam.slack.com/messages/yeelight-platform`
 
 Slack User => `@sahilchaddha`
 
