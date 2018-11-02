@@ -44,10 +44,38 @@ Edit config.json. Refer to `config-sample.json`.
 
 ### Writing Custom Preset
 
+Sample Preset: `"1000, 2, 2700, 100, 500, 1,255, 10, 5000, 7, 0,0, 500, 2, 5000, 1"`
+
+NOTE: Each visible state changing is defined to be a flow tuple that contains 4
+elements: `[duration, mode, value, brightness]`. 
+
+A flow expression is a series of flow tuples.
+So for above preset example, it means: change CT to 2700K & maximum brightness
+gradually in 1000ms, then change color to red & 10% brightness gradually in 500ms, then
+stay at this state for 5 seconds, then change CT to 5000K & minimum brightness gradually in
+500ms.
+
+`[duration, mode, value, brightness]`:
+
+
+Duration: Gradual change time or sleep time, in milliseconds,
+minimum value 50.
+
+
+Mode: 1 – color, 2 – color temperature, 7 – sleep.
+
+
+Value: RGB value when mode is 1, CT value when mode is 2,
+Ignored when mode is 7.
+
+
+Brightness: Brightness value, -1 or 1 ~ 100. Ignored when mode is 7.
+When this value is -1, brightness in this tuple is ignored (only color or CT change takes effect). 
+
 ## TODO
 ```
     // Test Alpha
-    // Calculate CT/Color Accordingly
+    // Calculate CT/Color Accordingly & Add Presets
     // Test Beta
     // Edit Config.json
     // Edit README
