@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "babel-eslint": "^8.2.6",
+    "color-convert": "^1.9.3",
     "yeelight-platform": "^1.0.5"
   }
 }

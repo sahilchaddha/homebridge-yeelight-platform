@@ -76,7 +76,7 @@ YeelightPlatform.prototype = {
     if (accessory.context.accType === 'lightBulb') {
       this.info('** Configure LightBulb ' + JSON.parse(accessory.context.lightInfo).id)
       accessory.reachable = true
-      const lightBulb = new LightBulb(null, this.log, homebridge, accessory)
+      const lightBulb = new LightBulb(null, this.log, homebridge, accessory, this.config)
       this.lights[JSON.parse(accessory.context.lightInfo).id] = lightBulb
     } else if (accessory.context.accType === 'presetSwitch') {
       this.info('** Configure FlowSwitch ' + accessory.context.sceneName)
@@ -98,7 +98,7 @@ YeelightPlatform.prototype = {
   },
   lightDidConnect: function (light) {
     this.info('** Discovered New Light ' + light.id)
-    const lightBulb = new LightBulb(light, this.log, homebridge)
+    const lightBulb = new LightBulb(light, this.log, homebridge, null, this.config)
     this.lights[light.id] = lightBulb
     const accessory = lightBulb.accessory()
     this.api.registerPlatformAccessories(pluginName, platformName, [accessory])

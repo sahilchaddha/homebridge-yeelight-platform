@@ -71,7 +71,7 @@ const FlowSwitch = class extends Accessory {
 
   getFlowParams() {
     if (this.flowScene === 'custom') {
-      return this.flowParams
+      return ['cf', 0, 0, this.flowParams]
     }
 
     return flows[this.flowScene]
@@ -90,7 +90,7 @@ const FlowSwitch = class extends Accessory {
       yeeService.sendCommand(lights, {
         id: -1,
         method: 'set_scene',
-        params: ['cf', 0, 0, this.getFlowParams()],
+        params: this.getFlowParams(),
       })
       callback()
     } else {

@@ -8,12 +8,13 @@
 
 const Accessory = require('./base')
 const yeeService = require('../services/deviceService')
+const Color = require('../utils/color')
 
 const coloredModels = ['color', 'stripe', 'bedside', 'bslamp']
 const ctModels = ['mono', 'ceiling2']
 
 const LightBulb = class extends Accessory {
-  constructor(light, log, homebridge, accessory = null) {
+  constructor(light, log, homebridge, accessory = null, baseConfig) {
     var lightInfo = {}
     if (light) {
       lightInfo = light
@@ -29,6 +30,13 @@ const LightBulb = class extends Accessory {
     this.log = log
     if (light) {
       this.ac.context.lightInfo = JSON.stringify(lightInfo)
+    }
+
+    this.colorPalleteRGB = false
+
+    if (baseConfig.rgb && baseConfig.rgb[this.name]) {
+      this.log('Setting Color Model to RGB : ', this.name)
+      this.colorPalleteRGB = true
     }
 
     this.isOn = false
@@ -94,21 +102,31 @@ const LightBulb = class extends Accessory {
         cmd.method = 'set_power'
         cmd.params = [value, 'smooth', 500]
         break
-      case 'hue':
-        cmd.method = 'set_hsv'
-        cmd.params = [this.hue, this.saturation, 'smooth', 500]
-        break
       case 'brightness':
         cmd.method = 'set_bright'
         cmd.params = [value, 'smooth', 500]
         break
+      case 'hue':
+        if (this.colorPalleteRGB) {
+          cmd.method = 'set_rgb'
+          cmd.params = [Color.HSVToRGB(this.hue, this.saturation, this.brightness), 'smooth', 500]
+        } else {
+          cmd.method = 'set_hsv'
+          cmd.params = [this.hue, this.saturation, 'smooth', 500]
+        }
+        break
       case 'saturation':
-        cmd.method = 'set_hsv'
-        cmd.params = [this.hue, this.saturation, 'smooth', 500]
+        if (this.colorPalleteRGB) {
+          cmd.method = 'set_rgb'
+          cmd.params = [Color.HSVToRGB(this.hue, this.saturation, this.brightness), 'smooth', 500]
+        } else {
+          cmd.method = 'set_hsv'
+          cmd.params = [this.hue, this.saturation, 'smooth', 500]
+        }
         break
       case 'ct':
         cmd.method = 'set_ct_abx'
-        cmd.params = [this.ct, 'smooth', 500]
+        cmd.params = [Color.HKTToKCT(this.ct), 'smooth', 500]
         break
       default:
         break
@@ -132,7 +150,12 @@ const LightBulb = class extends Accessory {
       this.rgb = Number(results[2])
       this.hue = Number(results[5])
       this.saturation = Number(results[6])
-      this.ct = Number(results[7])
+      if (this.colorPalleteRGB) {
+        const hsl = Color.RGBToHSV(this.rgb)
+        this.hue = hsl.hue
+        this.saturation = hsl.sat
+      }
+      this.ct = Color.KCTToHKT(Number(results[7]))
     }
   }
 
