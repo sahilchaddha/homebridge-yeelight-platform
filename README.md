@@ -69,11 +69,8 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
 
 ## TODO
 ```
-    // Edit README + Add Config Details for lights & custom presets + Add Supported Devices Images + RGB + shouldturnoff
-    // Github Tags
-    // Make Demo
-    // Publish
-    // Test
+    // Edit README + Add Config Details for lights & custom presets + Add Supported Devices + RGB + shouldturnoff
+    // Demo
 ```
 
 ### Demo
