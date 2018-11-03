@@ -70,10 +70,10 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
 ## TODO
 ```
     // Edit README + Add Config Details for lights & custom presets + Add Supported Devices Images + RGB + shouldturnoff
+    // Github Tags
     // Make Demo
-    // Add Tags to Repo
-    // Test Prod
     // Publish
+    // Test
 ```
 
 ### Demo
@@ -112,22 +112,28 @@ https://www.mi.com/us/mi-bedside-lamp/
     "platforms": [
         {
             "platform": "Yeelight-Platform",
+            "addResetSwitch": true,
+            "shouldTurnOff": true,
             "scenes": [
                 {
-                    "name": "Romance Time",
-                    "scene": "romantic"
+                    "name": "Sleep Time",
+                    "scene": "custom",
+                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10",
+                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
+                },
+                {
+                    "name": "Disco Time",
+                    "scene": "disco"
                 },
                 {
                     "name": "Night Mode",
                     "scene": "night_mode",
-                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
-                },
-                {
-                    "name": "Sleep Time",
-                    "scene": "custom",
-                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10"
+                    "lights": ["0x000000000543dd83"] 
                 }
-            ]
+            ],
+            "rgb": {
+                "0x0000000005429bb96": true
+            }
         }
     ]
 }

@@ -9,16 +9,17 @@
                 {
                     "name": "Sleep Time",
                     "scene": "custom",
-                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10"
+                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10",
+                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
                 },
                 {
-                    "name": "Romance Time",
-                    "scene": "romantic"
+                    "name": "Disco Time",
+                    "scene": "disco"
                 },
                 {
                     "name": "Night Mode",
                     "scene": "night_mode",
-                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
+                    "lights": ["0x000000000543dd83"] 
                 }
             ],
             "rgb": {
