@@ -106,34 +106,61 @@ https://www.mi.com/us/mi-bedside-lamp/
 
 ```json
 {
-    "platforms": [
-        {
             "platform": "Yeelight-Platform",
             "addResetSwitch": true,
             "shouldTurnOff": true,
             "scenes": [
                 {
-                    "name": "Sleep Time",
+                    "name": "Dark Cave",
                     "scene": "custom",
-                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10",
-                    "lights": ["0x000000000543dd83", "0x00000000052ebb4a"] 
+                    "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10"
                 },
                 {
-                    "name": "Disco Time",
+                    "name": "Break in",
+                    "scene": "custom",
+                    "params": "500,1,255,100,500,1,255,10"
+                },
+                {
+                    "name": "Disco",
                     "scene": "disco"
+                },
+                {
+                    "name": "Party",
+                    "scene": "birthday_party"
+                },
+                {
+                    "name": "Flash",
+                    "scene": "flash_notify"
+                },
+                {
+                    "name": "Candle Light",
+                    "scene": "candle_flicker"
+                },
+                {
+                    "name": "Police_1",
+                    "scene": "police_1"
+                },
+                {
+                    "name": "Police_2",
+                    "scene": "police_2"
+                },
+                {
+                    "name": "Alarm",
+                    "scene": "alarm"
+                },
+                {
+                    "name": "Gaming",
+                    "scene": "gaming"
                 },
                 {
                     "name": "Night Mode",
                     "scene": "night_mode",
-                    "lights": ["0x000000000543dd83"] 
+                    "lights": [
+                        "0x000000000543dd83"
+                    ]
                 }
-            ],
-            "rgb": {
-                "0x0000000005429bb96": true
-            }
+            ]
         }
-    ]
-}
 ```
 
 ## Lint
