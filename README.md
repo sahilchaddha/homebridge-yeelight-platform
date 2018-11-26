@@ -37,7 +37,18 @@ Edit config.json. Refer to `config-sample.json`.
   custom
 ```
 
-### Writing Custom Preset
+### Writing Custom Color Flow
+
+If you want to write a custom flow, scene should be `custom` in config.json. Also provide `params` paramameter.
+
+Example : 
+```json
+     {
+        "name": "Dark Cave",
+        "scene": "custom",
+        "params": "2000,1,255,70,2000,1,255,100,5000,1,255,70,3000,1,13369548,100,3000,1,13369548,10"
+    }
+```
 
 Sample Preset: `"1000, 2, 2700, 100, 500, 1,255, 10, 5000, 7, 0,0, 500, 2, 5000, 1"`
 
@@ -69,7 +80,7 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
 
 ## TODO
 ```
-    // Edit README + Add Config Details for lights & custom presets + Add Supported Devices + RGB + shouldturnoff
+    // Add Supported Devices
     // Demo
 ```
 
@@ -162,6 +173,30 @@ https://www.mi.com/us/mi-bedside-lamp/
             ]
         }
 ```
+
+## Plugin Config : 
+
+| Config                          | Type                | Description                                           | Default |
+|------------------------------------|---------------------|-------------------------------------------------------|--------|
+| addResetSwitch                      | bool      | Should add Reset Switch to reset all scenes.                          | true|
+| shouldTurnOff                      | bool      | Should turn off lights after scene is over. set false if you want lights to go back to their original state | true|
+| scenes                      | Array (Object)      | Scenes                          | Required|
+| rgb                      | Object (light ID: true/false)      | Key-Value pair for light Ids you wish to use rgb pallete instead of hsv. | Optional|
+
+### Scenes Config : 
+
+| Config                          | Type                | Description                                           | Default |
+|------------------------------------|---------------------|-------------------------------------------------------|--------|
+| name                      | string      | Accessory Name                          | Required, Unique|
+| scene                      | string      | Scene Name. For lists of scenes refer to [Available Preset Scenes](https://github.com/sahilchaddha/homebridge-yeelight-platform#available-presets-scenes) | Required|
+| params                      | string      | Custom Color Flow Params. This parameter is required if scene is `custom`. Refer to [Writing Color Flow params](https://github.com/sahilchaddha/homebridge-yeelight-platform#writing-custom-preset) | Optional|
+| lights                      | Array (string)      | Array of Light Ids to set scene to. All other lights will be ignored. | Run scene on all lights|
+
+### Getting Light ID :
+
+Once your light is connected and displayed on Home App. You can get its light ID by simply looking at Serial Number of the accessory in Home App.
+
+![SerialNo](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/serial-no.jpeg)
 
 ## Lint
 
