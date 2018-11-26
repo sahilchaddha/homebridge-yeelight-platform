@@ -196,7 +196,7 @@ https://www.mi.com/us/mi-bedside-lamp/
 
 Once your light is connected and displayed on Home App. You can get its light ID by simply looking at Serial Number of the accessory in Home App.
 
-![SerialNo](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/serial-no.jpeg)
+<img src="https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/serial-no.jpeg" width="200" height="400" />
 
 ## Lint
 
