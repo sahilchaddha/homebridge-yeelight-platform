@@ -82,6 +82,8 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
 
 ![Demo](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/demo.gif)
 
+![Demo2](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/demo2.gif)
+
 ## Compatible Devices
 
 https://www.yeelight.com/en_US/product/wifi-led-c
