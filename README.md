@@ -78,12 +78,6 @@ Ignored when mode is 7.
 Brightness: Brightness value, -1 or 1 ~ 100. Ignored when mode is 7.
 When this value is -1, brightness in this tuple is ignored (only color or CT change takes effect). 
 
-## TODO
-```
-    // Add Supported Devices
-    // Demo
-```
-
 ### Demo
 
 ![Demo](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/demo.gif)
@@ -189,7 +183,7 @@ https://www.mi.com/us/mi-bedside-lamp/
 |------------------------------------|---------------------|-------------------------------------------------------|--------|
 | name                      | string      | Accessory Name                          | Required, Unique|
 | scene                      | string      | Scene Name. For lists of scenes refer to [Available Preset Scenes](https://github.com/sahilchaddha/homebridge-yeelight-platform#available-presets-scenes) | Required|
-| params                      | string      | Custom Color Flow Params. This parameter is required if scene is `custom`. Refer to [Writing Color Flow params](https://github.com/sahilchaddha/homebridge-yeelight-platform#writing-custom-preset) | Optional|
+| params                      | string      | Custom Color Flow Params. This parameter is required if scene is `custom`. Refer to [Writing Color Flow params](https://github.com/sahilchaddha/homebridge-yeelight-platform#writing-custom-color-flow) | Optional|
 | lights                      | Array (string)      | Array of Light Ids to set scene to. All other lights will be ignored. | Run scene on all lights|
 
 ### Getting Light ID :
