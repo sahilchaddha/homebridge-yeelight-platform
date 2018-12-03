@@ -80,9 +80,15 @@ When this value is -1, brightness in this tuple is ignored (only color or CT cha
 
 ### Demo
 
+#### Yeelight Color Bulb
+
 ![Demo](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/demo.gif)
 
+#### Mi Bedside Lamp
+
 ![Demo2](https://raw.githubusercontent.com/sahilchaddha/homebridge-yeelight-platform/master/demo2.gif)
+
+Note : Night Mode is super low brightness mode which was not shown properly in the demo video due to camera quality.
 
 ## Compatible Devices
 
