@@ -20,8 +20,8 @@ function YeelightPlatform(log, config = {}, api) {
   this.log = log
   this.config = config
   this.debug = this.config.debug || false
-  this.addResetSwitch = this.config.addResetSwitch || true
-  this.shouldTurnOff = this.config.shouldTurnOff || true
+  this.addResetSwitch = (typeof this.config.addResetSwitch === 'undefined') ? true : this.config.addResetSwitch
+  this.shouldTurnOff = (typeof this.config.shouldTurnOff === 'undefined') ? true : this.config.shouldTurnOff
   this.lights = {}
   this.switches = {}
   this.resetSwitch = null
