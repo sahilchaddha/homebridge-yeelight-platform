@@ -21,10 +21,12 @@ class YeeDeviceService extends EventEmitter {
     this.isDebug = false
     this.homebridge = null
     this.devices = {}
+    this.interval = 15000
   }
 
-  setHomebridge(homebridgeRef) {
+  setHomebridge(homebridgeRef, pollInterval) {
     this.homebridge = homebridgeRef
+    this.interval = pollInterval
   }
 
   setLogger(logger) {
@@ -57,6 +59,7 @@ class YeeDeviceService extends EventEmitter {
     this.log('** Adding Cached Device', device)
     var newDevice = device
     newDevice.debug = this.isDebug
+    newDevice.interval = this.interval
     this.devices[device.id] = {
       yeeDevice: new YeeDevice(newDevice),
     }
@@ -77,7 +80,7 @@ class YeeDeviceService extends EventEmitter {
     // Add New Device
     var newDevice = device
     newDevice.debug = this.isDebug
-
+    newDevice.interval = this.interval
     this.devices[device.id] = {
       yeeDevice: new YeeDevice(newDevice),
     }

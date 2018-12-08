@@ -5,6 +5,7 @@
             "debug": true,
             "addResetSwitch": true,
             "shouldTurnOff": true,
+            "pollingInterval": 20000,
             "scenes": [
                 {
                     "name": "Sleep Time",
