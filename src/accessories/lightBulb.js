@@ -103,7 +103,7 @@ const LightBulb = class extends Accessory {
     switch (type) {
       case 'power':
         cmd.method = 'set_power'
-        cmd.params = [value, 'smooth', 500, this.colorPalleteRGB ? 2 : 3]
+        cmd.params = [value, 'smooth', 500]
         break
       case 'brightness':
         cmd.method = 'set_bright'
