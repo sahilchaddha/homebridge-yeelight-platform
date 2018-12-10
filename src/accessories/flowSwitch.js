@@ -116,7 +116,8 @@ const FlowSwitch = class extends Accessory {
 
       if (this.flowScene === 'night_mode') {
         offCmd.method = 'set_power'
-        offCmd.params = ['off', 'smooth', 500, 5]
+        // TODO: 
+        offCmd.params = ['on', 'smooth', 500, 3]
       }
 
       yeeService.sendCommand(lights, offCmd)
