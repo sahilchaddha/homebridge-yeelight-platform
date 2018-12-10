@@ -116,7 +116,10 @@ const FlowSwitch = class extends Accessory {
 
       if (this.flowScene === 'night_mode') {
         offCmd.method = 'set_power'
-        offCmd.params = ['off', 'smooth', 500, 5]
+        offCmd.params = ['on', 'smooth', 500]
+        if (this.flowParams && typeof this.flowParams === 'number' && this.flowParams > 0) {
+          offCmd.params.push(this.flowParams)
+        }
       }
 
       yeeService.sendCommand(lights, offCmd)
@@ -138,7 +141,7 @@ const FlowSwitch = class extends Accessory {
 
   bindEvents() {
     emitter.on('YeeLightTurnOff', (name) => {
-      if (name === this.name) return
+      if (name === this.name || this.flowScene === 'night_mode') return
       this.switchOff()
     })
   }

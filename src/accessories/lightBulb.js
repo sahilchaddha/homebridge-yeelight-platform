@@ -10,9 +10,6 @@ const Accessory = require('./base')
 const yeeService = require('../services/deviceService')
 const Color = require('../utils/color')
 
-const coloredModels = ['color', 'stripe', 'bedside', 'bslamp']
-const ctModels = ['mono', 'ceiling2']
-
 const LightBulb = class extends Accessory {
   constructor(light, log, homebridge, accessory = null, baseConfig) {
     var lightInfo = {}
@@ -50,13 +47,18 @@ const LightBulb = class extends Accessory {
     this.connectDevice()
   }
 
+  logMessage(...args) {
+    if (this.homebridge.debug) {
+      this.log(args)
+    }
+  }
+
   updateDevice(light) {
-    this.log('** Updating Device')
     var lightInfo = light
     lightInfo.name = light.id
     this.ac.context.lightInfo = JSON.stringify(lightInfo)
     this.light = lightInfo
-    this.log('** Should Disconnect & Reconnect : ' + this.isConnected)
+    this.logMessage('** Device Location Updated. Should Disconnect & Reconnect : ' + this.isConnected, light)
     if (this.isConnected) {
       this.isConnected = false
       this.disconnectDevice()
@@ -100,7 +102,7 @@ const LightBulb = class extends Accessory {
     switch (type) {
       case 'power':
         cmd.method = 'set_power'
-        cmd.params = [value, 'smooth', 500, this.colorPalleteRGB ? 2 : 3]
+        cmd.params = [value, 'smooth', 500]
         break
       case 'brightness':
         cmd.method = 'set_bright'
@@ -136,6 +138,7 @@ const LightBulb = class extends Accessory {
   }
 
   deviceStateChanged(props) {
+    this.logMessage('Device Response', this.light.id, props)
     if (props != null && props.id != null && props.id === 199 && props.result != null && props.result.length > 0) {
       const results = props.result
       if (results[0] === 'on') {
@@ -166,20 +169,25 @@ const LightBulb = class extends Accessory {
     lightbulbService
       .getCharacteristic(this.homebridge.Characteristic.Brightness)
       .updateValue(this.brightness)
-    lightbulbService
-      .getCharacteristic(this.homebridge.Characteristic.Saturation)
-      .updateValue(this.saturation)
-    lightbulbService
-      .getCharacteristic(this.homebridge.Characteristic.Hue)
-      .updateValue(this.hue)
-    lightbulbService
-      .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
-      .updateValue(this.ct)
+    if (this.shouldAddColorChar()) {
+      lightbulbService
+        .getCharacteristic(this.homebridge.Characteristic.Saturation)
+        .updateValue(this.saturation)
+      lightbulbService
+        .getCharacteristic(this.homebridge.Characteristic.Hue)
+        .updateValue(this.hue)
+    }
+    if (this.shouldAddCTChar()) {
+      lightbulbService
+        .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+        .updateValue(this.ct)
+    }
   }
 
   getAccessoryServices() {
     const lightbulbService = new this.homebridge.Service.Lightbulb(this.name)
-
+    var isCT = false
+    var isColor = false
     lightbulbService
       .getCharacteristic(this.homebridge.Characteristic.On)
       .on('get', (callback) => {
@@ -203,7 +211,8 @@ const LightBulb = class extends Accessory {
       })
 
 
-    if (this.shouldAddColorChar(this.config.model)) {
+    if (this.shouldAddColorChar()) {
+      isColor = true
       lightbulbService
         .addCharacteristic(this.homebridge.Characteristic.Hue)
         .on('get', (callback) => {
@@ -227,11 +236,10 @@ const LightBulb = class extends Accessory {
         })
     }
 
-    if (this.shouldAddCTChar(this.config.model)) {
+    if (this.shouldAddCTChar()) {
+      isCT = true
       lightbulbService
-        .addOptionalCharacteristic(this.homebridge.Characteristic.ColorTemperature)
-      lightbulbService
-        .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+        .addCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .on('get', (callback) => {
           callback(null, this.ct)
         })
@@ -242,12 +250,14 @@ const LightBulb = class extends Accessory {
         })
     }
 
+    this.logMessage('Creating New Services ' + this.config.id + ' with color: ' + isColor + ' with ct: ' + isCT)
     return [lightbulbService]
   }
 
   setAccessoryServices() {
     const lightbulbService = this.ac.getService(this.homebridge.Service.Lightbulb)
-
+    var isCT = false
+    var isColor = false
     lightbulbService
       .getCharacteristic(this.homebridge.Characteristic.On)
       .on('get', (callback) => {
@@ -270,7 +280,8 @@ const LightBulb = class extends Accessory {
         callback()
       })
 
-    if (this.shouldAddColorChar(this.config.model)) {
+    if (this.shouldAddColorChar()) {
+      isColor = true
       lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.Hue)
         .on('get', (callback) => {
@@ -294,9 +305,13 @@ const LightBulb = class extends Accessory {
         })
     }
 
-    if (this.shouldAddCTChar(this.config.model)) {
-      lightbulbService
-        .addOptionalCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+    if (this.shouldAddCTChar()) {
+      isCT = true
+      if (!lightbulbService.getCharacteristic(this.homebridge.Characteristic.ColorTemperature)) {
+        this.logMessage('***** ERROR: CT CHARACTERISTIC NOT FOUND. Adding New One.. *****')
+        lightbulbService
+          .addCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+      }
       lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .on('get', (callback) => {
@@ -308,26 +323,40 @@ const LightBulb = class extends Accessory {
           callback()
         })
     }
+
+    this.logMessage('Configuring Cached Services ' + this.config.id + ' with color: ' + isColor + ' with ct: ' + isCT)
   }
 
-  shouldAddColorChar(model) {
-    var flag = false
-    coloredModels.forEach((cModel) => {
-      if (model.indexOf(cModel) !== -1) {
-        flag = true
-      }
-    })
-    return flag
+  shouldAddColorChar() {
+    if (this.config && this.config.support && this.config.support.length > 0) {
+      const supportedTypes = this.config.support.split(' ')
+      var flag = false
+      supportedTypes.forEach((item) => {
+        if (item === 'set_rgb' || item === 'set_hsv') {
+          flag = true
+        }
+      })
+      return flag
+    }
+    /*eslint no-console: 0*/
+    console.log(' *** ERROR *** CONFIG FAILED TO LOAD ** ')
+    return false
   }
 
-  shouldAddCTChar(model) {
-    var flag = false
-    ctModels.forEach((ctModel) => {
-      if (model.indexOf(ctModel) !== -1) {
-        flag = true
-      }
-    })
-    return !flag
+  shouldAddCTChar() {
+    if (this.config && this.config.support && this.config.support.length > 0) {
+      const supportedTypes = this.config.support.split(' ')
+      var flag = false
+      supportedTypes.forEach((item) => {
+        if (item === 'set_ct_abx') {
+          flag = true
+        }
+      })
+      return flag
+    }
+    /*eslint no-console: 0*/
+    console.log(' *** ERROR *** CONFIG FAILED TO LOAD ** ')
+    return false
   }
 
   getModelName() {

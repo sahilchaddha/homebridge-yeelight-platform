@@ -78,6 +78,9 @@ Ignored when mode is 7.
 Brightness: Brightness value, -1 or 1 ~ 100. Ignored when mode is 7.
 When this value is -1, brightness in this tuple is ignored (only color or CT change takes effect). 
 
+Params for Night Mode scene, Set `params` as a number. 1 => CT Mode, 2 => RGB Mode, 3 => HSV Mode, 4 => CF Mode.
+Switching off Night Mode will reset to provided params mode. If params not provided, it will only turn off lights, will not revert color to old state.
+
 ### Demo
 
 #### Yeelight Color Bulb
@@ -180,8 +183,9 @@ https://www.mi.com/us/mi-bedside-lamp/
 
 | Config                          | Type                | Description                                           | Default |
 |------------------------------------|---------------------|-------------------------------------------------------|--------|
-| addResetSwitch                      | bool      | Should add Reset Switch to reset all scenes.                          | true|
+| addResetSwitch                      | bool      | Should add Reset Switch to reset all scenes. Reset switch will not reset night_mode.                          | true|
 | shouldTurnOff                      | bool      | Should turn off lights after scene is over. set false if you want lights to go back to their original state | true|
+| pollingInterval                      | number      | Time in ms, for plugin to poll the light to update HomeKit characteristics | 15000|
 | scenes                      | Array (Object)      | Scenes                          | Required|
 | rgb                      | Object (light ID: true/false)      | Key-Value pair for light Ids you wish to use rgb pallete instead of hsv. | Optional|
 
