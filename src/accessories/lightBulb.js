@@ -239,11 +239,7 @@ const LightBulb = class extends Accessory {
     if (this.shouldAddCTChar()) {
       isCT = true
       lightbulbService
-        // TODO:
         .addCharacteristic(this.homebridge.Characteristic.ColorTemperature)
-        // .addOptionalCharacteristic(this.homebridge.Characteristic.ColorTemperature)
-      // lightbulbService
-        // .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .on('get', (callback) => {
           callback(null, this.ct)
         })
@@ -311,9 +307,11 @@ const LightBulb = class extends Accessory {
 
     if (this.shouldAddCTChar()) {
       isCT = true
-      // TODO:
-      // lightbulbService
-      //   .addOptionalCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+      if (!lightbulbService.getCharacteristic(this.homebridge.Characteristic.ColorTemperature)) {
+        this.logMessage('***** ERROR: CT CHARACTERISTIC NOT FOUND. Adding New One.. *****')
+        lightbulbService
+          .addCharacteristic(this.homebridge.Characteristic.ColorTemperature)
+      }
       lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .on('get', (callback) => {

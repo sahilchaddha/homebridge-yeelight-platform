@@ -182,7 +182,7 @@ https://www.mi.com/us/mi-bedside-lamp/
 |------------------------------------|---------------------|-------------------------------------------------------|--------|
 | addResetSwitch                      | bool      | Should add Reset Switch to reset all scenes.                          | true|
 | shouldTurnOff                      | bool      | Should turn off lights after scene is over. set false if you want lights to go back to their original state | true|
-| pollingInterval                      | number      | Time in ms, for plugin to poll the light to update HomeKit characteristics | 5000|
+| pollingInterval                      | number      | Time in ms, for plugin to poll the light to update HomeKit characteristics | 15000|
 | scenes                      | Array (Object)      | Scenes                          | Required|
 | rgb                      | Object (light ID: true/false)      | Key-Value pair for light Ids you wish to use rgb pallete instead of hsv. | Optional|
 
