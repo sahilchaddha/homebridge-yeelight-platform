@@ -116,7 +116,7 @@ const FlowSwitch = class extends Accessory {
 
       if (this.flowScene === 'night_mode') {
         offCmd.method = 'set_power'
-        // TODO: 
+        // TODO:
         offCmd.params = ['on', 'smooth', 500, 3]
       }
 

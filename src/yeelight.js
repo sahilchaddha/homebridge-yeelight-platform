@@ -20,7 +20,7 @@ function YeelightPlatform(log, config = {}, api) {
   this.log = log
   this.config = config
   this.debug = this.config.debug || false
-  this.pollingInterval = this.config.pollingInterval || 5000
+  this.pollingInterval = this.config.pollingInterval || 15000
   this.addResetSwitch = (typeof this.config.addResetSwitch === 'undefined') ? true : this.config.addResetSwitch
   this.shouldTurnOff = (typeof this.config.shouldTurnOff === 'undefined') ? true : this.config.shouldTurnOff
   this.lights = {}
