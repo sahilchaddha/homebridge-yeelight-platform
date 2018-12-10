@@ -54,12 +54,11 @@ const LightBulb = class extends Accessory {
   }
 
   updateDevice(light) {
-    this.logMessage('** Updating Device')
     var lightInfo = light
     lightInfo.name = light.id
     this.ac.context.lightInfo = JSON.stringify(lightInfo)
     this.light = lightInfo
-    this.logMessage('** Should Disconnect & Reconnect : ' + this.isConnected)
+    this.logMessage('** Device Location Updated. Should Disconnect & Reconnect : ' + this.isConnected, light)
     if (this.isConnected) {
       this.isConnected = false
       this.disconnectDevice()
@@ -139,9 +138,8 @@ const LightBulb = class extends Accessory {
   }
 
   deviceStateChanged(props) {
-    this.logMessage('Device Response', props)
+    this.logMessage('Device Response', this.light.id, props)
     if (props != null && props.id != null && props.id === 199 && props.result != null && props.result.length > 0) {
-      this.logMessage('Device Update', this.light.id, props)
       const results = props.result
       if (results[0] === 'on') {
         this.isOn = true
@@ -172,7 +170,6 @@ const LightBulb = class extends Accessory {
       .getCharacteristic(this.homebridge.Characteristic.Brightness)
       .updateValue(this.brightness)
     if (this.shouldAddColorChar()) {
-      this.logMessage('Updating Color', this.config.id)
       lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.Saturation)
         .updateValue(this.saturation)
@@ -181,7 +178,6 @@ const LightBulb = class extends Accessory {
         .updateValue(this.hue)
     }
     if (this.shouldAddCTChar()) {
-      this.logMessage('Updating CT', this.config.id)
       lightbulbService
         .getCharacteristic(this.homebridge.Characteristic.ColorTemperature)
         .updateValue(this.ct)
@@ -198,7 +194,6 @@ const LightBulb = class extends Accessory {
         callback(null, this.isOn)
       })
       .on('set', (value, callback) => {
-        this.logMessage('DEBUG SETTING POWER TO ON')
         this.isOn = value
         this.sendCommand('power', this.isOn ? 'on' : 'off')
         callback()
@@ -273,7 +268,6 @@ const LightBulb = class extends Accessory {
         callback(null, this.isOn)
       })
       .on('set', (value, callback) => {
-        this.logMessage('DEBUG SETTING POWER TO ON')
         this.isOn = value
         this.sendCommand('power', this.isOn ? 'on' : 'off')
         callback()
