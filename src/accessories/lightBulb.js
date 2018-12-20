@@ -43,6 +43,7 @@ const LightBulb = class extends Accessory {
     this.saturation = 100
     this.ct = 200
     this.isConnected = false
+    this.deviceConnectionTimer = null
     this.bindDevice()
     this.connectDevice()
   }
@@ -86,11 +87,14 @@ const LightBulb = class extends Accessory {
     device.yeeDevice.on('connected', () => {
       this.log('Connected', this.name)
       this.isConnected = true
+      device.yeeDevice.sendHeartBeat()
     })
 
     device.yeeDevice.on('disconnected', () => {
       this.log('Disconnected', this.name)
       this.isConnected = false
+      this.isOn = false
+      this.updateDeviceProps()
     })
   }
 
@@ -135,6 +139,17 @@ const LightBulb = class extends Accessory {
     }
 
     yeeService.sendCommand([this.light.id], cmd)
+    if (!this.isConnected) {
+      if (this.deviceConnectionTimer) {
+        clearTimeout(this.deviceConnectionTimer)
+        this.deviceConnectionTimer = null
+      }
+      this.deviceConnectionTimer = setTimeout(() => {
+        this.logMessage('Device Disconnected. Turning off device in HomeKit.')
+        this.isOn = false
+        this.updateDeviceProps()
+      }, 1000)
+    }
   }
 
   deviceStateChanged(props) {

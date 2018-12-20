@@ -35,6 +35,9 @@ const FlowSwitch = class extends Accessory {
       this.flowScene = config.scene
       this.lights = config.lights
       this.ac.context.sceneName = config.name
+      if (typeof config.shouldTurnOff !== 'undefined') {
+        this.shouldTurnOff = config.shouldTurnOff
+      }
     } else if (baseConfig && accessory) {
       this.flowName = accessory.context.sceneName
 
@@ -44,11 +47,13 @@ const FlowSwitch = class extends Accessory {
             this.flowScene = baseScene.scene
             this.flowParams = baseScene.params
             this.lights = baseScene.lights
+            if (typeof baseScene.shouldTurnOff !== 'undefined') {
+              this.shouldTurnOff = baseScene.shouldTurnOff
+            }
           }
         })
       }
     }
-
     this.bindEvents()
   }
 
@@ -123,7 +128,6 @@ const FlowSwitch = class extends Accessory {
       }
 
       yeeService.sendCommand(lights, offCmd)
-
       if (this.shouldTurnOff) {
         setTimeout(() => {
           yeeService.sendCommand(lights, {

@@ -184,7 +184,7 @@ https://www.mi.com/us/mi-bedside-lamp/
 | Config                          | Type                | Description                                           | Default |
 |------------------------------------|---------------------|-------------------------------------------------------|--------|
 | addResetSwitch                      | bool      | Should add Reset Switch to reset all scenes. Reset switch will not reset night_mode.                          | true|
-| shouldTurnOff                      | bool      | Should turn off lights after scene is over. set false if you want lights to go back to their original state | true|
+| shouldTurnOff                      | bool      | Global Should turn off lights after scene is over. set false if you want lights to go back to their original state | true|
 | pollingInterval                      | number      | Time in ms, for plugin to poll the light to update HomeKit characteristics | 15000|
 | scenes                      | Array (Object)      | Scenes                          | Required|
 | rgb                      | Object (light ID: true/false)      | Key-Value pair for light Ids you wish to use rgb pallete instead of hsv. | Optional|
@@ -197,6 +197,7 @@ https://www.mi.com/us/mi-bedside-lamp/
 | scene                      | string      | Scene Name. For lists of scenes refer to [Available Preset Scenes](https://github.com/sahilchaddha/homebridge-yeelight-platform#available-presets-scenes) | Required|
 | params                      | string      | Custom Color Flow Params. This parameter is required if scene is `custom`. Refer to [Writing Color Flow params](https://github.com/sahilchaddha/homebridge-yeelight-platform#writing-custom-color-flow) | Optional|
 | lights                      | Array (string)      | Array of Light Ids to set scene to. All other lights will be ignored. | Run scene on all lights|
+| shouldTurnOff                      | bool      | Scene Specific Should turn off lights after scene is over. set false if you want lights to go back to their original state | Global Value|
 
 ### Getting Light ID :
 
@@ -218,7 +219,7 @@ https://www.yeelight.com/download/Yeelight_Inter-Operation_Spec.pdf
 
 ## Need Help ?
 
-Get Slack Invite => `https://slackin-znyruquwmv.now.sh/`
+Get Slack Invite => `https://homebridge-slackin.glitch.me/`
 
 Slack Channel => `https://homebridgeteam.slack.com/messages/yeelight-platform`
 
