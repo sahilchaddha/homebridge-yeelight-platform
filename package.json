@@ -1,6 +1,6 @@
 {
   "name": "homebridge-yeelight-platform",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Homebridge Plugin for YeeLight LED Strips with preset scenes/Color Flow",
   "main": "index.js",
   "preferGlobal": true,
