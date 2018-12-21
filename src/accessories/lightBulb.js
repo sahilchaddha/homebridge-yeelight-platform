@@ -170,6 +170,8 @@ const LightBulb = class extends Accessory {
     if (cmd.method === 'set_ct_abx') {
       sceneCmd.params.push('ct')
       sceneCmd.params.push(Color.HKTToKCT(this.ct, this.light.model))
+    } else if (cmd.method === 'set_power') {
+      return cmd
     } else if (this.colorPalleteRGB) {
       sceneCmd.params.push('color')
       sceneCmd.params.push(Color.HSVToRGB(this.hue, this.saturation, this.brightness))
@@ -179,6 +181,7 @@ const LightBulb = class extends Accessory {
       sceneCmd.params.push(this.saturation)
     }
     sceneCmd.params.push(this.brightness)
+
     this.log('Sending Automated Command to LightBulb' + this.name, sceneCmd)
     return sceneCmd
   }
