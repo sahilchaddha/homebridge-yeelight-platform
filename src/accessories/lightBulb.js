@@ -30,10 +30,16 @@ const LightBulb = class extends Accessory {
     }
 
     this.colorPalleteRGB = false
+    this.isAutoLight = false
 
     if (baseConfig.rgb && baseConfig.rgb[this.name]) {
-      this.log('Setting Color Model to RGB : ', this.name)
-      this.colorPalleteRGB = true
+      this.log('Setting Color Model to RGB : ', baseConfig.rgb[this.name], this.name)
+      this.colorPalleteRGB = baseConfig.rgb[this.name]
+    }
+
+    if (baseConfig.autoLights && baseConfig.autoLights[this.name]) {
+      this.log('Setting Auto Light  : ', baseConfig.autoLights[this.name], this.name)
+      this.isAutoLight = baseConfig.autoLights[this.name]
     }
 
     this.isOn = false
@@ -137,6 +143,9 @@ const LightBulb = class extends Accessory {
       default:
         break
     }
+    if (this.isAutoLight) {
+      cmd = this.getAutoSceneCmd(cmd)
+    }
 
     yeeService.sendCommand([this.light.id], cmd)
     if (!this.isConnected) {
@@ -150,6 +159,28 @@ const LightBulb = class extends Accessory {
         this.updateDeviceProps()
       }, 1000)
     }
+  }
+
+  getAutoSceneCmd(cmd) {
+    var sceneCmd = {
+      id: -1,
+    }
+    sceneCmd.method = 'set_scene'
+    sceneCmd.params = []
+    if (cmd.method === 'set_ct_abx') {
+      sceneCmd.params.push('ct')
+      sceneCmd.params.push(Color.HKTToKCT(this.ct, this.light.model))
+    } else if (this.colorPalleteRGB) {
+      sceneCmd.params.push('color')
+      sceneCmd.params.push(Color.HSVToRGB(this.hue, this.saturation, this.brightness))
+    } else {
+      sceneCmd.params.push('hsv')
+      sceneCmd.params.push(this.hue)
+      sceneCmd.params.push(this.saturation)
+    }
+    sceneCmd.params.push(this.brightness)
+    this.log('Sending Automated Command to LightBulb' + this.name, sceneCmd)
+    return sceneCmd
   }
 
   deviceStateChanged(props) {

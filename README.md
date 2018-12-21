@@ -188,6 +188,7 @@ https://www.mi.com/us/mi-bedside-lamp/
 | pollingInterval                      | number      | Time in ms, for plugin to poll the light to update HomeKit characteristics | 15000|
 | scenes                      | Array (Object)      | Scenes                          | Required|
 | rgb                      | Object (light ID: true/false)      | Key-Value pair for light Ids you wish to use rgb pallete instead of hsv. | Optional|
+| autoLights                      | Object (light ID: true/false)      | Key-Value pair for light Ids to let Homekit automations set correct values. Homekit trumps Yeelight State | Optional|
 
 ### Scenes Config : 
 
