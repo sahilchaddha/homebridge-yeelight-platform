@@ -18,7 +18,7 @@ var homebridge
 
 function YeelightPlatform(log, config = {}, api) {
   this.log = log
-  this.config = config
+  this.config = config || {}
   this.debug = this.config.debug || false
   this.pollingInterval = this.config.pollingInterval || 15000
   this.addResetSwitch = (typeof this.config.addResetSwitch === 'undefined') ? true : this.config.addResetSwitch
@@ -40,12 +40,16 @@ YeelightPlatform.prototype = {
     if (this.debug) this.log(args)
   },
   didFinishLaunching: function () {
-    yeeService.on('deviceAdded', this.lightDidConnect.bind(this))
-    yeeService.on('deviceUpdated', this.lightDidUpdate.bind(this))
-    this.info(' ** Starting discovery **')
-    yeeService.startDiscovery()
+    if (this.config != null && this.config.platform != null && this.config.platform.length > 0) {
+      yeeService.on('deviceAdded', this.lightDidConnect.bind(this))
+      yeeService.on('deviceUpdated', this.lightDidUpdate.bind(this))
+      this.info(' ** Starting discovery **')
+      yeeService.startDiscovery()
 
-    this.addBaseAccessories()
+      this.addBaseAccessories()
+    } else {
+      this.log('Yeelight-Platform not found in config.json. Disabling homebridge-yeelight-platform.')
+    }
   },
   addBaseAccessories: function () {
     this.info('** Adding Base Accessories')
