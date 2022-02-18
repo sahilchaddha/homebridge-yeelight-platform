@@ -107,7 +107,7 @@ const LightBulb = class extends Accessory {
   sendCommand(type, value) {
     this.log('Sending Command to LightBulb' + this.name, type, value)
     var cmd = {
-      id: -1,
+      id: 1,
     }
     switch (type) {
       case 'power':
