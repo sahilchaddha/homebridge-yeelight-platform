@@ -163,7 +163,7 @@ const LightBulb = class extends Accessory {
 
   getAutoSceneCmd(cmd) {
     var sceneCmd = {
-      id: -1,
+      id: 1,
     }
     sceneCmd.method = 'set_scene'
     sceneCmd.params = []
